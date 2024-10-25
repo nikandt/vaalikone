@@ -94,7 +94,7 @@ const Vaalikone = () => {
                   </Box>
                   <Box px={3}>
                     <Slider
-                      defaultValue={null}
+                      defaultValue={undefined}
                       step={1}
                       min={1}
                       max={4}
