@@ -8,9 +8,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { doManhattanMatch } from '../matching-algorithm/matchers/manhattan-matcher';
 import { Answer, Candidate, Match } from '../types';
 
-import { ThemeProvider, CssBaseline } from '@mui/material';
-import theme from '../theme';
-
 
 const generateRandomAnswers = (numQuestions: number): Answer[] => {
   return Array.from({ length: numQuestions }, (_, idx) => ({
@@ -105,6 +102,7 @@ const Vaalikone = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>(Array.from({ length: questions.length }, () => ({ questionId: 0, answer: 0 })));
   const [matches, setMatches] = useState<Match[] | null>(null);
+  const [isComplete, setIsComplete] = useState(false);
 
 
   const handleAnswer = (selectedAnswer: number) => {
@@ -124,6 +122,8 @@ const Vaalikone = () => {
     setTimeout(() => {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
+        } else {
+          setIsComplete(true);
         }
     }, 500);
 };
@@ -142,12 +142,9 @@ const Vaalikone = () => {
   };
 
   return (
-   
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
       <Container maxWidth="md">
         <AnimatePresence> 
-          {questions.map((question, index) => (
+          { !isComplete && questions.map((question, index) => (
             index === currentQuestionIndex && (
               <Box
               key={question.id}
@@ -216,17 +213,15 @@ const Vaalikone = () => {
 
         </AnimatePresence>
 
-        <Box textAlign="center" mt={4}>
-             {/*} <Button variant="contained" color="primary" onClick={testMatcher}>
-                Find Matches
-              </Button>*/}
-              <Button variant="contained" color="primary" onClick={handleFindMatches}>
-            Run Test
-          </Button>
-            </Box>
+        {isComplete && (
+          <Box textAlign="center" mt={4}>
+            <Button variant="contained" color="primary" onClick={handleFindMatches}>
+              Run Test
+            </Button>
+          </Box>
+        )}
 
       </Container>
-    </ThemeProvider>
   );
 };
 

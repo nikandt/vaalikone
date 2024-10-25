@@ -1,6 +1,6 @@
 import { Container } from '@mui/material';
 
-export default function Home() {
+export default function Vieraat() {
     return (
       <Container maxWidth="md">
       </Container>
