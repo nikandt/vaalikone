@@ -42,8 +42,6 @@ const Vaalikone = () => {
     }
   };
 
-  const currentQuestion = questions[currentQuestionIndex];
-
   return (
    
     <ThemeProvider theme={theme}>
