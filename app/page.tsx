@@ -5,10 +5,66 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { doManhattanMatch } from './matching-algorithm/matchers/manhattan-matcher';
+import { Answer, Candidate, Match } from './types';
+
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import theme from './theme';
 
 
+const generateRandomAnswers = (numQuestions: number): Answer[] => {
+  return Array.from({ length: numQuestions }, (_, idx) => ({
+    questionId: idx + 1,
+    answer: Math.floor(Math.random() * 4) + 1
+  }));
+};
+{/*}
+const exampleCandidates: Candidate[] = [
+  { id: 'candidate-1', answers: generateRandomAnswers(8) },
+  { id: 'candidate-2', answers: generateRandomAnswers(8) },
+  { id: 'candidate-3', answers: generateRandomAnswers(8) }
+];*/}
+const exampleCandidates: Candidate[] = [
+  {
+    id: 'candidate-1',
+    answers: [
+      { questionId: 1, answer: 1 },
+      { questionId: 2, answer: 3 },
+      { questionId: 3, answer: 2 },
+      { questionId: 4, answer: 4 },
+      { questionId: 5, answer: 1 },
+      { questionId: 6, answer: 1 },
+      { questionId: 7, answer: 1 },
+      { questionId: 8, answer: 1 }
+    ]
+  },
+  {
+    id: 'candidate-2',
+    answers: [
+      { questionId: 1, answer: 3 },
+      { questionId: 2, answer: 2 },
+      { questionId: 3, answer: 1 },
+      { questionId: 4, answer: 4 },
+      { questionId: 5, answer: 2 },
+      { questionId: 6, answer: 1 },
+      { questionId: 7, answer: 4 },
+      { questionId: 8, answer: 3 }
+    ]
+  },
+  {
+    id: 'candidate-3',
+    answers: [
+      { questionId: 1, answer: 2 },
+      { questionId: 2, answer: 2 },
+      { questionId: 3, answer: 3 },
+      { questionId: 4, answer: 1 },
+      { questionId: 5, answer: 4 },
+      { questionId: 6, answer: 4 },
+      { questionId: 7, answer: 4 },
+      { questionId: 8, answer: 4 }
+    ]
+  }
+];
 const questions = [
   { id: 1, category: "Arvot", text: "Jos en jaksa kokata, wolttaan." },
   { id: 2, category: "Arvot", text: "Turun pitäisi olla Suomen pääkaupunki." },
@@ -21,13 +77,48 @@ const questions = [
 
 ];
 
+const exampleCitizenAnswers: Answer[] = [
+  { questionId: 1, answer: 2 },
+  { questionId: 2, answer: 3 },
+  { questionId: 3, answer: 1 },
+  { questionId: 4, answer: 4 },
+  { questionId: 5, answer: 2 },
+  { questionId: 6, answer: 1 },
+  { questionId: 7, answer: 4 },
+  { questionId: 8, answer: 3 }
+];
+
+const testMatcher = () => {
+  const matches: Match[] = exampleCandidates.map(candidate =>
+    doManhattanMatch({ answers: exampleCitizenAnswers }, candidate)
+  );
+  console.log("Match Results:", matches);
+};
+
+const findMatches = (userAnswers: Answer[], candidates: Candidate[]): Match[] => {
+  return candidates
+    .map(candidate => doManhattanMatch({ answers: userAnswers }, candidate))
+    .sort((a, b) => a.distance - b.distance);
+};
+
 const Vaalikone = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState(Array(questions.length).fill(null));
+  const [matches, setMatches] = useState<Match[] | null>(null);
 
-  const handleAnswer = (index: number) => {
+
+  const handleAnswer = (selectedAnswer: number) => {
     const newAnswers = [...answers];
-    newAnswers[currentQuestionIndex] = index;
+    const existingAnswerIndex = newAnswers.findIndex(
+      answer => answer.questionId === questions[currentQuestionIndex].id
+    );
+    const newAnswer = { questionId: questions[currentQuestionIndex].id, answer: selectedAnswer };
+    if (existingAnswerIndex !== -1) {
+      newAnswers[existingAnswerIndex] = newAnswer;
+    } else {
+      newAnswers.push(newAnswer);
+    }
+
     setAnswers(newAnswers);
     setTimeout(() => {
       if (currentQuestionIndex < questions.length - 1) {
@@ -42,12 +133,19 @@ const Vaalikone = () => {
     }
   };
 
+  const handleFindMatches = () => {
+    const userMatches = findMatches(answers, exampleCandidates);
+    //setMatches(userMatches);
+    console.log("Matches:", userMatches);
+
+  };
+
   return (
    
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container maxWidth="md">
-        <AnimatePresence>
+        <AnimatePresence> 
           {questions.map((question, index) => (
             index === currentQuestionIndex && (
               <Box
@@ -110,9 +208,22 @@ const Vaalikone = () => {
                 </Card>
                 </motion.div>
       </Box>
+
+      
             )
           ))}
+
         </AnimatePresence>
+
+        <Box textAlign="center" mt={4}>
+             {/*} <Button variant="contained" color="primary" onClick={testMatcher}>
+                Find Matches
+              </Button>*/}
+              <Button variant="contained" color="primary" onClick={handleFindMatches}>
+            Run Test
+          </Button>
+            </Box>
+
       </Container>
     </ThemeProvider>
   );
