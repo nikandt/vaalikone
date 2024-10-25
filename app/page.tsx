@@ -103,29 +103,30 @@ const findMatches = (userAnswers: Answer[], candidates: Candidate[]): Match[] =>
 
 const Vaalikone = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState(Array(questions.length).fill(null));
+  const [answers, setAnswers] = useState<Answer[]>(Array.from({ length: questions.length }, () => ({ questionId: 0, answer: 0 })));
   const [matches, setMatches] = useState<Match[] | null>(null);
 
 
   const handleAnswer = (selectedAnswer: number) => {
     const newAnswers = [...answers];
+    const currentQuestionId = questions[currentQuestionIndex].id;
     const existingAnswerIndex = newAnswers.findIndex(
-      answer => answer.questionId === questions[currentQuestionIndex].id
+        answer => answer && answer.questionId === currentQuestionId
     );
-    const newAnswer = { questionId: questions[currentQuestionIndex].id, answer: selectedAnswer };
-    if (existingAnswerIndex !== -1) {
-      newAnswers[existingAnswerIndex] = newAnswer;
-    } else {
-      newAnswers.push(newAnswer);
-    }
+    const newAnswer = { questionId: currentQuestionId, answer: selectedAnswer };
 
+    if (existingAnswerIndex !== -1) {
+        newAnswers[existingAnswerIndex] = newAnswer;
+    } else {
+        newAnswers[currentQuestionIndex] = newAnswer;
+    }
     setAnswers(newAnswers);
     setTimeout(() => {
-      if (currentQuestionIndex < questions.length - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-      }
+        if (currentQuestionIndex < questions.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+        }
     }, 500);
-  };
+};
 
   const handleSkip = () => {
     if (currentQuestionIndex < questions.length - 1) {
