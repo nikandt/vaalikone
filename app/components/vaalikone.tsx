@@ -128,6 +128,12 @@ const Vaalikone = () => {
     }, 500);
 };
 
+const handleRedo = () => {
+  setAnswers(Array(questions.length).fill(null));
+  setCurrentQuestionIndex(0);
+  setIsComplete(false);
+};
+
   const handleSkip = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -216,8 +222,11 @@ const Vaalikone = () => {
         {isComplete && (
           <Box textAlign="center" mt={4}>
             <Button variant="contained" color="primary" onClick={handleFindMatches}>
-              Run Test
+              Näytä tulokset
             </Button>
+            <Button variant="outlined" color="secondary" onClick={handleRedo} style={{ marginLeft: '10px' }}>
+              Uudelleen
+          </Button>
           </Box>
         )}
 
