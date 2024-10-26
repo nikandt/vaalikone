@@ -4,21 +4,22 @@ import { useState } from 'react';
 import Home from './components/home';
 import Vaalikone from './components/vaalikone';
 import Vieraat from './components/vieraat';
-import { Drawer, List, ListItem, ListItemText, IconButton } from '@mui/material';
+import { Drawer, List, ListItem, ListItemText, ListItemIcon, IconButton, Button, useMediaQuery, Divider, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-
+import HomeIcon from '@mui/icons-material/Home';
+import PollIcon from '@mui/icons-material/HowToVote';
+import PeopleIcon from '@mui/icons-material/Group';
+import CloseIcon from '@mui/icons-material/ChevronLeft';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import theme from './theme';
 
 export default function Page() {
   const [currentPage, setCurrentPage] = useState('home');
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const toggleDrawer = (open) => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-    setIsDrawerOpen(open);
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
   };
 
   const renderPage = () => {
@@ -28,7 +29,7 @@ export default function Page() {
       case 'vaalikone':
         return <Vaalikone />;
       case 'vieraat':
-          return <Vieraat />;
+        return <Vieraat />;
       default:
         return <Home />;
     }
@@ -36,33 +37,60 @@ export default function Page() {
 
   const handleNavigation = (page) => {
     setCurrentPage(page);
-    setIsDrawerOpen(false); // Close sidebar after selecting a page
+    if (isMobile) {
+      setIsDrawerOpen(false); // Close drawer on mobile after selecting a page
+    }
   };
 
   return (
     <ThemeProvider theme={theme}>
-    <CssBaseline />
-    <div>
-      <IconButton onClick={toggleDrawer(true)} aria-label="menu">
-        <MenuIcon />
-      </IconButton>
-      <Drawer open={isDrawerOpen} onClose={toggleDrawer(false)}>
-        <List>
-          <ListItem button onClick={() => handleNavigation('home')}>
-            <ListItemText primary="Home" />
-          </ListItem>
-          <ListItem button onClick={() => handleNavigation('vaalikone')}>
-            <ListItemText primary="Vaalikone" />
-          </ListItem>
-          <ListItem button onClick={() => handleNavigation('vieraat')}>
-            <ListItemText primary="Vieraat" />
-          </ListItem>
-        </List>
-      </Drawer>
-      <div>
-        {renderPage()}
+      <CssBaseline />
+      <div style={{ display: 'flex' }}>
+        {!isMobile && (
+          <Drawer
+            variant="permanent"
+            open={isDrawerOpen}
+            sx={{
+              width: isDrawerOpen ? 240 : 60,
+              flexShrink: 0,
+              '& .MuiDrawer-paper': {
+                width: isDrawerOpen ? 240 : 60,
+                overflow: 'hidden',
+                transition: 'width 0.3s',
+              },
+            }}
+          >
+            <Box display="flex" alignItems="center" justifyContent="flex-end" p={1}>
+              <IconButton onClick={toggleDrawer}>
+                {isDrawerOpen ? <CloseIcon /> : <MenuIcon />}
+              </IconButton>
+            </Box>
+            <Divider />
+            <List>
+              <ListItem button onClick={() => handleNavigation('home')}>
+                <ListItemIcon><HomeIcon /></ListItemIcon>
+                {isDrawerOpen && <ListItemText primary="Etusivu" />}
+              </ListItem>
+              <ListItem button onClick={() => handleNavigation('vaalikone')}>
+                <ListItemIcon><PollIcon /></ListItemIcon>
+                {isDrawerOpen && <ListItemText primary="Vaalikone" />}
+              </ListItem>
+              <ListItem button onClick={() => handleNavigation('vieraat')}>
+                <ListItemIcon><PeopleIcon /></ListItemIcon>
+                {isDrawerOpen && <ListItemText primary="Vieraat" />}
+              </ListItem>
+            </List>
+          </Drawer>
+        )}
+        {isMobile && !isDrawerOpen && (
+          <IconButton onClick={toggleDrawer} aria-label="menu">
+            <MenuIcon />
+          </IconButton>
+        )}
+        <div style={{ padding: '16px', width: '100%' }}>
+          {renderPage()}
+        </div>
       </div>
-    </div>
     </ThemeProvider>
   );
 }
