@@ -37,7 +37,7 @@ const testMatcher = () => {
 
 const findMatches = (userAnswers: Answer[], candidates: Candidate[]): Match[] => {
   return candidates
-    .map(candidate => doManhattanMatch({ answers: userAnswers }, candidate))
+    .map(candidate => doManhattanMatch({ answers: userAnswers }, { ...candidate, id: candidate.id.toString() }))
     .sort((a, b) => a.distance - b.distance);
 };
 
