@@ -36,14 +36,14 @@ function useUserSession(initialUser: User | null) {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(authUser => {
+    const unsubscribe = onAuthStateChanged((authUser: User | null) => {
       setUser(authUser ? { displayName: authUser.displayName, email: authUser.email, photoURL: authUser.photoURL } : null);
     });
     return () => unsubscribe();
   }, []);
 
   useEffect(() => {
-    onAuthStateChanged(authUser => {
+    onAuthStateChanged((authUser: User | null) => {
       if (user === undefined) return;
       if (user?.email !== authUser?.email) router.refresh();
     });
