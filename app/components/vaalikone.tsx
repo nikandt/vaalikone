@@ -6,7 +6,9 @@ import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { doManhattanMatch } from '../matching-algorithm/matchers/manhattan-matcher';
-import { Answer, Candidate, Match } from '../types';
+import { Answer } from '../types/answers';
+import { Candidate } from '../types/candidate';
+import { Match } from '../types/matchers';
 import { questions } from '../data/questions';
 import { useUsers } from '../data/users';
 import { ANSWER_LABELS } from '../types/answer_labels';
