@@ -37,9 +37,9 @@ export default function Page() {
       <Header initialUser={null} />
       <div style={{ display: 'flex' }}>
 
-        {!isMobile && (
+        {/*!isMobile &&*/ (
           <Drawer
-          variant={isMobile ? "temporary" : "permanent"}
+            variant="permanent"
             open={isDrawerOpen}
             sx={{
               width: isDrawerOpen ? 240 : 60,
@@ -72,11 +72,11 @@ export default function Page() {
             </List>
           </Drawer>
         )}
-        {isMobile && !isDrawerOpen && (
+       {/* {isMobile && !isDrawerOpen && (
           <IconButton onClick={toggleDrawer} aria-label="menu">
             <MenuIcon />
           </IconButton>
-        )}
+        )}*/}
         <div style={{ padding: '16px', width: '100%' }}>
           {currentPage === 'home' && <Home navigateToVaalikone={() => handleNavigation('vaalikone')} />}
           {currentPage === 'vaalikone' && <Vaalikone />}
