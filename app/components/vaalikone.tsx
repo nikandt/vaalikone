@@ -252,7 +252,7 @@ const handleRedo = () => {
                     <TableBody>
                     {answers.map((answer) => {
                       const questionText = questions.find(q => q.id === answer.questionId)?.text || "Unknown question";
-                      const candidateAnswer = candidate?.answers?.find(a => a.questionId === answer.questionId);
+                      const candidateAnswer = candidate?.answers?.find((a : Answer) => a.questionId === answer.questionId);
                       return (
                         <TableRow key={answer.questionId}>
                           <TableCell>

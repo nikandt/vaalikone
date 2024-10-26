@@ -3,7 +3,7 @@ import styles from '../styles/Vieraat.module.scss';
 import { FaSearch } from 'react-icons/fa';
 import { Button, Card, CardContent, Typography, Container } from '@mui/material';
 
-import { User } from '../types';
+import { User } from '../types/user';
 
 import { useUsers } from '../data/users';
 //import { useUserAnswersStore } from '../data/useUserAnswersStore';
