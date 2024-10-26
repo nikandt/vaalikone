@@ -6,7 +6,7 @@ import { Button, Card, CardContent, Typography, Container } from '@mui/material'
 import { User } from '../types';
 
 import { useUsers } from '../data/users';
-import { useUserAnswersStore } from '../data/useUserAnswersStore';
+//import { useUserAnswersStore } from '../data/useUserAnswersStore';
 
 const Vieraat: React.FC = () => {
   const { users: users, loading } = useUsers();

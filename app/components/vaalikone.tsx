@@ -40,7 +40,7 @@ const findMatches = (userAnswers: Answer[], candidates: Candidate[]): Match[] =>
 };
 
 const Vaalikone = () => {
-  const { users: candidates, loading } = useUsers();
+  const { users: candidates } = useUsers();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const { answers, setAnswer, updateCustomText, resetAnswers } = useUserAnswersStore();
   //const [answers, setAnswers] = useState<Answer[]>(Array.from({ length: questions.length }, () => ({ questionId: 0, answer: 0 })));

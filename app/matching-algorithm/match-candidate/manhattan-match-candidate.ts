@@ -1,6 +1,6 @@
-import { doCfaMatch, maxCfaDistance } from '../matchers/cfa-matcher';
+//import { doCfaMatch, maxCfaDistance } from '../matchers/cfa-matcher';
 import {
-  distanceToPercentage,
+  /*distanceToPercentage,*/
   doManhattanMatch
 } from '../matchers/manhattan-matcher';
 import { Answer } from '../types/answers';
