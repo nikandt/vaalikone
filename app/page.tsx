@@ -39,7 +39,7 @@ export default function Page() {
 
         {!isMobile && (
           <Drawer
-            variant="permanent"
+          variant={isMobile ? "temporary" : "permanent"}
             open={isDrawerOpen}
             sx={{
               width: isDrawerOpen ? 240 : 60,

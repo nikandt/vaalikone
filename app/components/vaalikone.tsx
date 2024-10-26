@@ -165,6 +165,10 @@ const handleRedo = () => {
                         { value: 4, label: 'Täysin\nsamaa\nmieltä' }
                       ]}
                       sx={{
+                        '& .MuiSlider-markLabel': {
+                          fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                          textAlign: 'center',
+                        },
                         '& .MuiSlider-thumb': {
                           display: selectedAnswer > 0 ? 'block' : 'none',
                           boxShadow: 'none !important',

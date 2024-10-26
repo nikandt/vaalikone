@@ -73,7 +73,6 @@ const theme = createTheme({
         markLabel: {
           whiteSpace: 'pre-line', 
           textAlign: 'center', 
-          fontSize: '0.875rem',
           outline: 'none !important',
           marginTop: '8px',
           boxShadow: 'none !important',
