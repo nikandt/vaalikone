@@ -4,7 +4,8 @@ import { useState } from 'react';
 import Home from './components/home';
 import Vaalikone from './components/vaalikone';
 import Vieraat from './components/vieraat';
-import { Drawer, List, ListItem, ListItemText, ListItemIcon, IconButton, Button, useMediaQuery, Divider, Box } from '@mui/material';
+import Header from './components/Header';
+import { Drawer, List, ListItem, ListItemText, ListItemIcon, IconButton, useMediaQuery, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import PollIcon from '@mui/icons-material/HowToVote';
@@ -45,7 +46,9 @@ export default function Page() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <Header initialUser={null} />
       <div style={{ display: 'flex' }}>
+
         {!isMobile && (
           <Drawer
             variant="permanent"
@@ -65,7 +68,6 @@ export default function Page() {
                 {isDrawerOpen ? <CloseIcon /> : <MenuIcon />}
               </IconButton>
             </Box>
-            <Divider />
             <List>
               <ListItem button onClick={() => handleNavigation('home')}>
                 <ListItemIcon><HomeIcon /></ListItemIcon>
