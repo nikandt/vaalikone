@@ -1,15 +1,6 @@
 import { useState, useEffect } from 'react';
 import { sampleAnswersList } from './answers';
-
-type User = {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  website: string;
-  address: { street: string; city: string };
-  answers: { questionId: number; answer: number }[];
-};
+import { User } from '../types';
 
 const assignAnswersToUser = (user: User, index: number): User => {
     const answers = sampleAnswersList[index % sampleAnswersList.length] || [];

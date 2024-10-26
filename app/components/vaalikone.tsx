@@ -8,6 +8,10 @@ import { doManhattanMatch } from '../matching-algorithm/matchers/manhattan-match
 import { Answer, Candidate, Match } from '../types';
 import { questions } from '../data/questions';
 import { useUsers } from '../data/users';
+import { ANSWER_LABELS } from '../types/answer_labels';
+
+// Käyttäjän vastaukset
+import { useUserAnswersStore } from '../data/useUserAnswersStore';
 
 {/*const generateRandomAnswers = (numQuestions: number): Answer[] => {
   return Array.from({ length: numQuestions }, (_, idx) => ({
@@ -34,42 +38,34 @@ const findMatches = (userAnswers: Answer[], candidates: Candidate[]): Match[] =>
 const Vaalikone = () => {
   const { users: candidates, loading } = useUsers();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<Answer[]>(Array.from({ length: questions.length }, () => ({ questionId: 0, answer: 0 })));
+  const { answers, setAnswer, resetAnswers } = useUserAnswersStore();
+  //const [answers, setAnswers] = useState<Answer[]>(Array.from({ length: questions.length }, () => ({ questionId: 0, answer: 0 })));
   const [isComplete, setIsComplete] = useState(false);
   const [matches, setMatches] = useState<Match[] | null>(null);
 
   const handleAnswer = (selectedAnswer: number) => {
-    const newAnswers = [...answers];
     const currentQuestionId = questions[currentQuestionIndex].id;
-    const existingAnswerIndex = newAnswers.findIndex(
-        answer => answer && answer.questionId === currentQuestionId
-    );
-    const newAnswer = { questionId: currentQuestionId, answer: selectedAnswer };
+    setAnswer({ questionId: currentQuestionId, answer: selectedAnswer });
 
-    if (existingAnswerIndex !== -1) {
-        newAnswers[existingAnswerIndex] = newAnswer;
-    } else {
-        newAnswers[currentQuestionIndex] = newAnswer;
-    }
-    setAnswers(newAnswers);
+    // Calculate matches
+    const currentMatches = findMatches(answers, candidates);
+    console.log("Matches after question", currentQuestionIndex + 1, ":", currentMatches);
 
-    // Laske match-% jokaisen vastauksen jälkeen
-    const userMatches = findMatches(newAnswers, candidates);
-    //console.log("Finding matches for: ", newAnswers);
-    console.log("Comparing to: ", candidates);
-    console.log("Matches after answering question", currentQuestionIndex + 1, ":", userMatches);
+    //console.log("Finding matches for: ", answers);
+    //console.log("Comparing to: ", candidates);
 
     setTimeout(() => {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         } else {
           setIsComplete(true);
+          setMatches(currentMatches);
         }
     }, 500);
 };
 
 const handleRedo = () => {
-  setAnswers(Array(questions.length).fill(null));
+  resetAnswers();
   setCurrentQuestionIndex(0);
   setIsComplete(false);
   setMatches(null);
@@ -161,15 +157,73 @@ const handleRedo = () => {
         </AnimatePresence>
 
         {isComplete && (
-          <Box textAlign="center" mt={4}>
-            <Button variant="contained" color="primary" onClick={handleFindMatches}>
-              Näytä tulokset
-            </Button>
-            <Button variant="outlined" color="secondary" onClick={handleRedo} style={{ marginLeft: '10px' }}>
-              Uudelleen
-          </Button>
+  <Box textAlign="center" mt={4}>
+    <Button variant="contained" color="primary" onClick={handleFindMatches}>
+      Näytä tulokset
+    </Button>
+    <Button variant="outlined" color="secondary" onClick={handleRedo} style={{ marginLeft: '10px' }}>
+      Uudelleen
+    </Button>
+
+    <Typography variant="h5" mt={4} mb={2}>Matchit</Typography>
+
+    {matches && (
+      <Box display="flex" flexDirection="column" alignItems="center" gap={2} mt={2}>
+        {matches.slice(0, 3).map((match) => {
+          const candidate = candidates.find(c => c.id === match.secondAnswererId);
+          return (
+            <Card key={match.secondAnswererId} sx={{ width: '100%', maxWidth: 400, padding: 2 }}>
+              <Typography variant="h6">{candidate?.name || "Unknown Candidate"}</Typography>
+              <Typography variant="body2" color="textSecondary">
+                Yhteensopivuus: {(match.percentage * 100).toFixed(1)}%
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Etäisyys: {match.distance}
+              </Typography>
+            </Card>
+          );
+        })}
+      </Box>
+    )}
+
+        {matches && (
+          <Box mt={4}>
+            {matches.map((match) => {
+              const candidate = candidates.find(c => c.id === match.secondAnswererId);
+              return (
+                <Box key={match.secondAnswererId} mb={3}>
+                  <Typography variant="h6" mb={1}>
+                    {candidate?.name} - Yksityiskohtainen vertailu
+                  </Typography>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Kysymys</TableCell>
+                        <TableCell>Vastauksesi</TableCell>
+                        <TableCell>{candidate?.name} Vastaukset</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {answers.map((answer) => {
+                        const candidateAnswer = candidate?.answers.find(a => a.questionId === answer.questionId);
+                        return (
+                          <TableRow key={answer.questionId}>
+                          <TableCell>{questions.find(q => q.id === answer.questionId)?.text}</TableCell>
+                          <TableCell>{ANSWER_LABELS[answer.answer] || "N/A"}</TableCell>
+                          <TableCell>{ANSWER_LABELS[candidateAnswer?.answer] || "N/A"}</TableCell>
+                        </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Box>
+              );
+            })}
           </Box>
         )}
+      </Box>
+    )}
+
 
 
       </Container>

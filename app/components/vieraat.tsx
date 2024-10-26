@@ -3,32 +3,37 @@ import styles from '../styles/Vieraat.module.scss';
 import { FaSearch } from 'react-icons/fa';
 import { Button, Card, CardContent, Typography, Container } from '@mui/material';
 
-type User = {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  website: string;
-  address: { street: string; city: string };
-};
+import { User } from '../types';
+
+import { useUsers } from '../data/users';
+import { useUserAnswersStore } from '../data/useUserAnswersStore';
 
 const Vieraat: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const { users: users, loading } = useUsers();
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'email'>('name');
   const [isAscending, setIsAscending] = useState(true);
 
   useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then((response) => response.json())
-      .then((data) => {
-        setUsers(data);
-        setFilteredUsers(data);
-        setLoading(false);
-      });
-  }, []);
+    let updatedUsers = users.filter((user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    updatedUsers = updatedUsers.sort((a, b) => {
+      let compare;
+      if (sortBy === 'name') {
+        const lastNameA = getLastName(a.name).toLowerCase();
+        const lastNameB = getLastName(b.name).toLowerCase();
+        compare = lastNameA.localeCompare(lastNameB);
+      } else {
+        compare = a.email.localeCompare(b.email);
+      }
+      return isAscending ? compare : -compare;
+    });
+
+    setFilteredUsers(updatedUsers);
+  }, [users, searchTerm, sortBy, isAscending]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value.toLowerCase();
@@ -103,10 +108,7 @@ const Vieraat: React.FC = () => {
             <CardContent>
               <Typography variant="h5">{user.name}</Typography>
               <Typography variant="body2">
-                <strong>Email:</strong> {user.email}
-              </Typography>
-              <Typography variant="body2">
-                <strong>Phone:</strong> {user.phone}
+                <strong>Sähköposti:</strong> {user.email}
               </Typography>
             </CardContent>
           </Card>
