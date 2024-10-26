@@ -15,31 +15,19 @@ import { ThemeProvider, CssBaseline } from '@mui/material';
 import theme from './theme';
 
 export default function Page() {
-  const [currentPage, setCurrentPage] = useState('home');
   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [currentPage, setCurrentPage] = useState<'home' | 'vaalikone' | 'vieraat'>('home');
+
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'home':
-        return <Home />;
-      case 'vaalikone':
-        return <Vaalikone />;
-      case 'vieraat':
-        return <Vieraat />;
-      default:
-        return <Home />;
-    }
-  };
-
-  const handleNavigation = (page) => {
+  const handleNavigation = (page: 'home' | 'vaalikone' | 'vieraat') => {
     setCurrentPage(page);
     if (isMobile) {
-      setIsDrawerOpen(false); // Close drawer on mobile after selecting a page
+      setIsDrawerOpen(false);
     }
   };
 
@@ -90,7 +78,9 @@ export default function Page() {
           </IconButton>
         )}
         <div style={{ padding: '16px', width: '100%' }}>
-          {renderPage()}
+          {currentPage === 'home' && <Home navigateToVaalikone={() => handleNavigation('vaalikone')} />}
+          {currentPage === 'vaalikone' && <Vaalikone />}
+          {currentPage === 'vieraat' && <Vieraat />}
         </div>
       </div>
     </ThemeProvider>

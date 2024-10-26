@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import styles from '../styles/Home.module.scss';
 import { Card, CardContent, Typography, Box, Button } from '@mui/material';
-import Link from 'next/link';
 
 import { useUsers } from '../data/users';
 
-const Home = () => {
+const Home = ({ navigateToVaalikone }: { navigateToVaalikone: () => void }) => {
   const [ip, setIp] = useState<string | null>(null);
 
   const { totalUsers, loading } = useUsers();
@@ -15,6 +14,7 @@ const Home = () => {
       .then((response) => response.json())
       .then((data) => setIp(data.ip));
   }, []);
+
 
   return (
     <div className={styles.home}>
@@ -27,7 +27,7 @@ const Home = () => {
           <CardContent>
             <Typography variant="h6">Vieraita yhteensä</Typography>
             
-            <Typography variant="h4">{totalUsers}</Typography>
+            <Typography variant="h4">{loading ? loading : totalUsers}</Typography>
           </CardContent>
         </Card>
 
@@ -65,11 +65,9 @@ const Home = () => {
           <CardContent>
             <Typography variant="h6">Vaalikoneen tulokset</Typography>
             <Typography variant="h4"></Typography>
-            <Link href="/vaalikone" passHref>
-          <Button variant="contained" color="primary">
-           Tee vaalikone
-          </Button>
-        </Link>
+            <Button variant="contained" color="primary" onClick={navigateToVaalikone}>
+              Tee vaalikone
+            </Button>
           </CardContent>
         </Card>
       </Box>
