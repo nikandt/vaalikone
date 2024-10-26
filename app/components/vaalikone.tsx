@@ -216,7 +216,7 @@ const handleRedo = () => {
     {matches && (
       <Box display="flex" flexDirection="column" alignItems="center" gap={2} mt={2}>
         {matches.slice(0, 3).map((match) => {
-          const candidate = candidates.find(c => c.id === match.secondAnswererId);
+          const candidate = candidates.find(c => c.id.toString() === match.secondAnswererId.toString());
           return (
             <Card key={match.secondAnswererId} sx={{ width: '100%', maxWidth: 400, padding: 2 }}>
               <Typography variant="h6">{candidate?.name || "Unknown Candidate"}</Typography>
@@ -235,7 +235,8 @@ const handleRedo = () => {
         {matches && (
           <Box mt={4}>
             {matches.map((match) => {
-              const candidate = candidates.find(c => c.id === match.secondAnswererId);
+              const candidate = candidates.find(c => c.id.toString() === match.secondAnswererId.toString());
+
               return (
                 <Box key={match.secondAnswererId} mb={3}>
                   <Typography variant="h6" mb={1}>
@@ -264,7 +265,7 @@ const handleRedo = () => {
                             )}
                           </TableCell>
                           <TableCell>{ANSWER_LABELS[answer.answer] || "N/A"}</TableCell>
-                          <TableCell>{ANSWER_LABELS[candidateAnswer?.answer] || "N/A"}</TableCell>
+                          <TableCell>{candidateAnswer ? ANSWER_LABELS[candidateAnswer.answer] : "N/A"}</TableCell>
                         </TableRow>
                       );
                     })}
