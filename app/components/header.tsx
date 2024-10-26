@@ -3,6 +3,8 @@ import { useState, useEffect, MouseEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithGoogle, signOut, onAuthStateChanged } from '../lib/firebase/auth';
 import { firebaseConfig } from '../lib/firebase/config';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -98,8 +100,8 @@ const Header: React.FC<{ initialUser: User | null }> = ({ initialUser }) => {
             </Menu>
           </>
         ) : (
-          <Button color="inherit" onClick={handleSignIn} startIcon={<Avatar src="/profile.svg" alt="Placeholder user" />}>
-            Sign In with Google
+            <Button color="inherit" onClick={handleSignIn} startIcon={<FontAwesomeIcon icon={faSignInAlt} />}>
+            Login
           </Button>
         )}
       </Toolbar>

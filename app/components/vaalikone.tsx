@@ -14,6 +14,9 @@ import { ANSWER_LABELS } from '../types/answer_labels';
 // Käyttäjän vastaukset
 import { useUserAnswersStore } from '../data/useUserAnswersStore';
 
+// Firebase test
+import { saveQuestionnaireAnswers } from "../lib/firebase/firestore";
+
 {/*const generateRandomAnswers = (numQuestions: number): Answer[] => {
   return Array.from({ length: numQuestions }, (_, idx) => ({
     questionId: idx + 1,
@@ -68,6 +71,7 @@ const Vaalikone = () => {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         } else {
           setIsComplete(true);
+          saveQuestionnaireAnswers(answers); // Save to firebase
           setMatches(currentMatches);
         }
         setSelectedAnswer(0);
