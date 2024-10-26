@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { Container, Card, Typography, Button, Slider, Box } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Container, Card, Typography, Button, Slider, Box, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -33,11 +32,11 @@ const findMatches = (userAnswers: Answer[], candidates: Candidate[]): Match[] =>
 };
 
 const Vaalikone = () => {
-  const { users: exampleCandidates, loading } = useUsers();
+  const { users: candidates, loading } = useUsers();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>(Array.from({ length: questions.length }, () => ({ questionId: 0, answer: 0 })));
-  const [matches, setMatches] = useState<Match[] | null>(null);
   const [isComplete, setIsComplete] = useState(false);
+  const [matches, setMatches] = useState<Match[] | null>(null);
 
   const handleAnswer = (selectedAnswer: number) => {
     const newAnswers = [...answers];
@@ -53,6 +52,13 @@ const Vaalikone = () => {
         newAnswers[currentQuestionIndex] = newAnswer;
     }
     setAnswers(newAnswers);
+
+    // Laske match-% jokaisen vastauksen jälkeen
+    const userMatches = findMatches(newAnswers, candidates);
+    //console.log("Finding matches for: ", newAnswers);
+    console.log("Comparing to: ", candidates);
+    console.log("Matches after answering question", currentQuestionIndex + 1, ":", userMatches);
+
     setTimeout(() => {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -66,6 +72,7 @@ const handleRedo = () => {
   setAnswers(Array(questions.length).fill(null));
   setCurrentQuestionIndex(0);
   setIsComplete(false);
+  setMatches(null);
 };
 
   const handleSkip = () => {
@@ -75,8 +82,8 @@ const handleRedo = () => {
   };
 
   const handleFindMatches = () => {
-    const userMatches = findMatches(answers, exampleCandidates);
-    //setMatches(userMatches);
+    const userMatches = findMatches(answers, candidates);
+    setMatches(userMatches);
     console.log("Matches:", userMatches);
 
   };
@@ -163,6 +170,7 @@ const handleRedo = () => {
           </Button>
           </Box>
         )}
+
 
       </Container>
   );

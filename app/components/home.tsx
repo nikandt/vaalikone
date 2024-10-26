@@ -28,11 +28,6 @@ const Home = () => {
             <Typography variant="h6">Vieraita yhteensä</Typography>
             
             <Typography variant="h4">{totalUsers}</Typography>
-            <Link href="/vaalikone" passHref>
-          <Button variant="contained" color="primary">
-           Selaa vastauksia
-          </Button>
-        </Link>
           </CardContent>
         </Card>
 

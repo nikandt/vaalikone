@@ -12,7 +12,7 @@ type User = {
 };
 
 const assignAnswersToUser = (user: User, index: number): User => {
-    const answers = sampleAnswersList[index % sampleAnswersList.length];
+    const answers = sampleAnswersList[index % sampleAnswersList.length] || [];
     return { ...user, answers };
   };
 
@@ -24,7 +24,7 @@ export const useUsers = () => {
     fetch('https://jsonplaceholder.typicode.com/users')
       .then((response) => response.json())
       .then((data) => {
-        const usersWithAnswers = data.map((user: User) => assignAnswersToUser(user));
+        const usersWithAnswers = data.map((user: User, index: number) => assignAnswersToUser(user, index));
         setUsers(usersWithAnswers);
         setLoading(false);
       });
