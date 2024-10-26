@@ -1,4 +1,4 @@
 export interface Candidate {
-    id: string;
-    answers: Answer[];
+    id: string | number;
+    answers: { questionId: number; answer: number, customText?: string }[];
   }
