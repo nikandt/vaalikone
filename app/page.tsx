@@ -61,11 +61,11 @@ export default function Page() {
                 <ListItemIcon><HomeIcon /></ListItemIcon>
                 {isDrawerOpen && <ListItemText primary="Etusivu" />}
               </ListItemButton>
-              <ListItemButton button onClick={() => handleNavigation('vaalikone')}>
+              <ListItemButton onClick={() => handleNavigation('vaalikone')}>
                 <ListItemIcon><PollIcon /></ListItemIcon>
                 {isDrawerOpen && <ListItemText primary="Vaalikone" />}
               </ListItemButton>
-              <ListItemButton button onClick={() => handleNavigation('vieraat')}>
+              <ListItemButton onClick={() => handleNavigation('vieraat')}>
                 <ListItemIcon><PeopleIcon /></ListItemIcon>
                 {isDrawerOpen && <ListItemText primary="Vieraat" />}
               </ListItemButton>
