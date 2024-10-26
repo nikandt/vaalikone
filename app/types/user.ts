@@ -5,6 +5,6 @@ export interface User {
     phone: string;
     website: string;
     address: { street: string; city: string };
-    answers: { questionId: number; answer: number }[];
+    answers: { questionId: number; answer: number, customText?: string }[];
   };
   

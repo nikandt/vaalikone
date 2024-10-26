@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
-import { Container, Card, Typography, Button, Slider, Box, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Container, Card, LinearProgress, TextField, Typography, Button, Slider, Box, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -38,10 +39,15 @@ const findMatches = (userAnswers: Answer[], candidates: Candidate[]): Match[] =>
 const Vaalikone = () => {
   const { users: candidates, loading } = useUsers();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const { answers, setAnswer, resetAnswers } = useUserAnswersStore();
+  const { answers, setAnswer, updateCustomText, resetAnswers } = useUserAnswersStore();
   //const [answers, setAnswers] = useState<Answer[]>(Array.from({ length: questions.length }, () => ({ questionId: 0, answer: 0 })));
   const [isComplete, setIsComplete] = useState(false);
   const [matches, setMatches] = useState<Match[] | null>(null);
+  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+
+  const handleCustomTextChange = (questionId: number, text: string) => {
+    updateCustomText(questionId, text);
+  };
 
   const handleAnswer = (selectedAnswer: number) => {
     const currentQuestionId = questions[currentQuestionIndex].id;
@@ -78,14 +84,19 @@ const handleRedo = () => {
   };
 
   const handleFindMatches = () => {
-    const userMatches = findMatches(answers, candidates);
-    setMatches(userMatches);
-    console.log("Matches:", userMatches);
-
+    //const userMatches = findMatches(answers, candidates);
+    //setMatches(userMatches);
+    //console.log("Matches:", userMatches);
   };
 
   return (
       <Container maxWidth="md">
+      <Box my={2}>
+        <LinearProgress variant="determinate" value={progress} />
+        <Typography variant="body2" color="textSecondary" align="center" mt={1}>
+          {Math.round(progress)}%
+        </Typography>
+      </Box>
         <AnimatePresence> 
           { !isComplete && questions.map((question, index) => (
             index === currentQuestionIndex && (
@@ -147,6 +158,14 @@ const handleRedo = () => {
                     />
                   </Box>
                 </Card>
+                <Box mt={2}>
+                    <TextField
+                      label="Lisää vastausteksti (valinnainen)"
+                      variant="outlined"
+                      fullWidth
+                      onChange={(e) => handleCustomTextChange(question.id, e.target.value)}
+                    />
+                  </Box>
                 </motion.div>
       </Box>
 
@@ -198,23 +217,31 @@ const handleRedo = () => {
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell>Kysymys</TableCell>
-                        <TableCell>Vastauksesi</TableCell>
-                        <TableCell>{candidate?.name} Vastaukset</TableCell>
+                        <TableCell><strong>Kysymys</strong></TableCell>
+                        <TableCell><strong>Vastauksesi</strong></TableCell>
+                        <TableCell><strong>{candidate?.name} Vastaukset</strong></TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {answers.map((answer) => {
-                        const candidateAnswer = candidate?.answers.find(a => a.questionId === answer.questionId);
-                        return (
-                          <TableRow key={answer.questionId}>
-                          <TableCell>{questions.find(q => q.id === answer.questionId)?.text}</TableCell>
+                    {answers.map((answer) => {
+                      const questionText = questions.find(q => q.id === answer.questionId)?.text || "Unknown question";
+                      const candidateAnswer = candidate?.answers?.find(a => a.questionId === answer.questionId);
+                      return (
+                        <TableRow key={answer.questionId}>
+                          <TableCell>
+                            {questionText}
+                            {candidateAnswer?.customText && (
+                              <Typography variant="body2" color="textSecondary" mt={0.5} >
+                                Vastausteksti: {candidateAnswer.customText}
+                              </Typography>
+                            )}
+                          </TableCell>
                           <TableCell>{ANSWER_LABELS[answer.answer] || "N/A"}</TableCell>
                           <TableCell>{ANSWER_LABELS[candidateAnswer?.answer] || "N/A"}</TableCell>
                         </TableRow>
-                        );
-                      })}
-                    </TableBody>
+                      );
+                    })}
+                  </TableBody>
                   </Table>
                 </Box>
               );
