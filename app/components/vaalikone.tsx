@@ -45,6 +45,9 @@ const Vaalikone = () => {
   const [matches, setMatches] = useState<Match[] | null>(null);
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
+  // Älä näytä vastausvaihtoehtoa ennen valintaa
+  const [selectedAnswer, setSelectedAnswer] = useState<number>(0);
+
   const handleCustomTextChange = (questionId: number, text: string) => {
     updateCustomText(questionId, text);
   };
@@ -67,6 +70,7 @@ const Vaalikone = () => {
           setIsComplete(true);
           setMatches(currentMatches);
         }
+        setSelectedAnswer(0);
     }, 500);
 };
 
@@ -144,7 +148,7 @@ const handleRedo = () => {
                   </Box>
                   <Box px={3}>
                     <Slider
-                      defaultValue={undefined}
+                      value={selectedAnswer}
                       step={1}
                       min={1}
                       max={4}
@@ -154,6 +158,23 @@ const handleRedo = () => {
                         { value: 3, label: 'Jokseenkin\nsamaa\nmieltä' },
                         { value: 4, label: 'Täysin\nsamaa\nmieltä' }
                       ]}
+                      sx={{
+                        '& .MuiSlider-thumb': {
+                          display: selectedAnswer > 0 ? 'block' : 'none',
+                          boxShadow: 'none !important',
+                          outline: 'none !important',
+                          border: 'none !important',
+                          '&::before, &::after': { // Remove shadow from potential pseudo-elements
+                            display: 'none',
+                            boxShadow: 'none !important',
+                          },
+                          '&:hover, &:active, &.Mui-focusVisible, &:focus': {
+                            boxShadow: 'none !important',
+                            outline: 'none !important',
+                          },
+                        },
+                      }}
+                      onChange={(e, value) => setSelectedAnswer(value as number)}
                       onChangeCommitted={(e, value) => handleAnswer(value as number)}
                     />
                   </Box>

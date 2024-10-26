@@ -28,15 +28,32 @@ const theme = createTheme({
     },
     MuiSlider: {
       styleOverrides: {
+        root: {
+          boxShadow: 'none !important',
+          outline: 'none !important',
+          '&:hover, &:active, &.Mui-focusVisible, &:focus': {
+            boxShadow: 'none !important',
+            outline: 'none !important',
+          },
+        },
         track: {
           display: 'none', 
+          boxShadow: 'none !important',
+          outline: 'none !important',
         },
         rail: {
           backgroundColor: '#ccc', 
           opacity: 1,
+          boxShadow: 'none !important',
+          outline: 'none !important',
         },
         thumb: {
           backgroundColor: '#3cbdb2',
+          boxShadow: 'none',
+          border: 'none', 
+          '&:hover, &:active, &.Mui-focusVisible': {
+            boxShadow: 'none !important',
+          },
         },
         mark: {
           width: '2em',
@@ -45,15 +62,21 @@ const theme = createTheme({
           backgroundColor: '#ccc',
           opacity: 1,
           transform: 'translateX(-50%) translateY(-50%)',
+          boxShadow: 'none !important',
+          outline: 'none !important',
         },
         markActive: {
           backgroundColor: '#ccc',
+          boxShadow: 'none !important',
+          outline: 'none !important',
         },
         markLabel: {
           whiteSpace: 'pre-line', 
           textAlign: 'center', 
           fontSize: '0.875rem',
+          outline: 'none !important',
           marginTop: '8px',
+          boxShadow: 'none !important',
         },
       },
     },
