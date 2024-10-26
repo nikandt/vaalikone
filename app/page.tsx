@@ -5,7 +5,7 @@ import Home from './components/home';
 import Vaalikone from './components/vaalikone';
 import Vieraat from './components/vieraat';
 import Header from './components/header';
-import { Drawer, List, ListItem, ListItemText, ListItemIcon, IconButton, useMediaQuery, Box } from '@mui/material';
+import { Drawer, List, ListItemButton, ListItemText, ListItemIcon, IconButton, useMediaQuery, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import PollIcon from '@mui/icons-material/HowToVote';
@@ -57,18 +57,18 @@ export default function Page() {
               </IconButton>
             </Box>
             <List>
-              <ListItem button onClick={() => handleNavigation('home')}>
+              <ListItemButton onClick={() => handleNavigation('home')}>
                 <ListItemIcon><HomeIcon /></ListItemIcon>
                 {isDrawerOpen && <ListItemText primary="Etusivu" />}
-              </ListItem>
-              <ListItem button onClick={() => handleNavigation('vaalikone')}>
+              </ListItemButton>
+              <ListItemButton button onClick={() => handleNavigation('vaalikone')}>
                 <ListItemIcon><PollIcon /></ListItemIcon>
                 {isDrawerOpen && <ListItemText primary="Vaalikone" />}
-              </ListItem>
-              <ListItem button onClick={() => handleNavigation('vieraat')}>
+              </ListItemButton>
+              <ListItemButton button onClick={() => handleNavigation('vieraat')}>
                 <ListItemIcon><PeopleIcon /></ListItemIcon>
                 {isDrawerOpen && <ListItemText primary="Vieraat" />}
-              </ListItem>
+              </ListItemButton>
             </List>
           </Drawer>
         )}
