@@ -7,7 +7,7 @@ import { useUsers } from '../data/users';
 const Home = ({ navigateToVaalikone }: { navigateToVaalikone: () => void }) => {
   const [ip, setIp] = useState<string | null>(null);
 
-  const { totalUsers, loading } = useUsers();
+  const { totalUsers } = useUsers();
 
   useEffect(() => {
     fetch('https://api.ipify.org?format=json')
@@ -27,7 +27,7 @@ const Home = ({ navigateToVaalikone }: { navigateToVaalikone: () => void }) => {
           <CardContent>
             <Typography variant="h6">Vieraita yhteensä</Typography>
             
-            <Typography variant="h4">{loading ? loading : totalUsers}</Typography>
+            <Typography variant="h4">{totalUsers}</Typography>
           </CardContent>
         </Card>
 
