@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Home from './components/home';
 import Vaalikone from './components/vaalikone';
 import Vieraat from './components/vieraat';
-import Header from './components/Header';
+import Header from './components/header';
 import { Drawer, List, ListItem, ListItemText, ListItemIcon, IconButton, useMediaQuery, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';

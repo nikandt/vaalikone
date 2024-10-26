@@ -1,26 +1,27 @@
 import { db } from "./clientApp";
 
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
-//const db = getFirestore();
 
 export async function saveQuestionnaireAnswers(answers) {
-  const auth = getAuth();
-  const user = auth.currentUser;
+    const auth = getAuth();
+    const user = auth.currentUser;
   
-  if (user) {
-    try {
-      await addDoc(collection(db, "questionnaire_answers"), {
-        userId: user.uid,
-        answers: answers,
-        timestamp: serverTimestamp()
-      });
-      console.log("Answers saved successfully");
-    } catch (error) {
-      console.error("Error saving answers: ", error);
+    if (!user) {
+      console.error('User not authenticated');
+      return;
     }
-  } else {
-    console.log("User is not authenticated");
+  
+    const userDocRef = doc(db, 'questionnaire_answers', user.uid);
+  
+    try {
+      await setDoc(userDocRef, {
+        answers,
+        timestamp: serverTimestamp() // Adds a timestamp to the document
+      });
+      console.log('Answers successfully saved with a timestamp to Firestore!');
+    } catch (error) {
+      console.error('Error saving answers:', error);
+    }
   }
-}
