@@ -1,7 +1,7 @@
 import { db } from './clientApp';
 
 import { getAuth } from 'firebase/auth';
-import { doc, serverTimestamp, setDoc, collection, getDocs } from 'firebase/firestore';
+import { doc, serverTimestamp, setDoc, collection, getDocs, getDoc } from 'firebase/firestore';
 
 export async function saveQuestionnaireAnswers(answers) {
   const auth = getAuth();
@@ -86,29 +86,19 @@ export async function saveMockUsersAndAnswers(mockUsers) {
   }
 }*/
 
-// NOTE: Only run this ONCE! Saves question set
-export async function saveQuestionSet() {
-  const questionSetData = {
-    id: "set_2024",
-    title: "2025 syndet",
-    questions: [
-      { id: 1, category: 'Arvot', text: 'Jos en jaksa kokata, wolttaan.' },
-      { id: 2, category: 'Arvot', text: 'Turun pitäisi olla Suomen pääkaupunki.' },
-      { id: 3, category: 'Arvot', text: 'Katson mieluummmin YouTube-videoita kuin kuuntelen podcasteja.' },
-      { id: 4, category: 'Arvot', text: 'Nykyään muutetaan yhteen liian matalalla kynnyksellä.' },
-      { id: 5, category: 'Turvallisuus', text: 'Vekaranjärven laivastotukikohta tulisi lakkauttaa.' },
-      { id: 6, category: 'Turvallisuus', text: 'Stubbin tulisi esittää uskottava suunnitelma Suur-Suomen laajentamiseksi.' },
-      { id: 7, category: 'Turvallisuus', text: 'Oblivionissa pitäisi olla enemmän vartijoita.' },
-      { id: 8, category: 'Turvallisuus', text: 'Väinämöinen II:n laukaisukoodien salaustasoa tulisi korottaa.' }
-    ]
-  };
-
-  const questionSetDocRef = doc(db, 'question_sets', questionSetData.id);
+export async function fetchQuestionSet(questionSetId) {
+  const questionSetDocRef = doc(db, 'question_sets', questionSetId);
 
   try {
-    await setDoc(questionSetDocRef, questionSetData);
-    console.log('Question set successfully saved to Firestore!');
+    const questionSetSnapshot = await getDoc(questionSetDocRef);
+    if (questionSetSnapshot.exists()) {
+      return questionSetSnapshot.data();
+    } else {
+      console.log("No such question set found");
+      return null;
+    }
   } catch (error) {
-    console.error('Error saving question set:', error);
+    console.error("Error fetching question set:", error);
+    return null;
   }
 }

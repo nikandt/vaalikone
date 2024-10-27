@@ -1,6 +1,5 @@
 'use client';
 
-import { questions } from '../data/questions';
 import { useUsers } from '../data/users';
 import { doManhattanMatch } from '../matching-algorithm/matchers/manhattan-matcher';
 import { ANSWER_LABELS } from '../types/answer_labels';
@@ -12,8 +11,8 @@ import { Match } from '../types/matchers';
 import { useUserAnswersStore } from '../data/useUserAnswersStore';
 
 // Firebase 
-import { saveQuestionnaireAnswers, saveQuestionSet } from '../lib/firebase/firestore';
-import { useState } from 'react';
+import { saveQuestionnaireAnswers, fetchQuestionSet } from '../lib/firebase/firestore';
+import { useState, useEffect } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -34,25 +33,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
-{
-  /*const generateRandomAnswers = (numQuestions: number): Answer[] => {
-  return Array.from({ length: numQuestions }, (_, idx) => ({
-    questionId: idx + 1,
-    answer: Math.floor(Math.random() * 4) + 1
-  }));
-};
-}*/
-}
-
-{
-  /*
-const testMatcher = () => {
-  const matches: Match[] = exampleCandidates.map(candidate =>
-    doManhattanMatch({ answers: exampleCitizenAnswers }, candidate)
-  );
-  console.log("Match Results:", matches);
-};*/
-}
+const questionSetId = 'set_2024';
 
 const findMatches = (
   userAnswers: Answer[],
@@ -69,6 +50,8 @@ const findMatches = (
 };
 
 const Vaalikone = () => {
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { users: candidates } = useUsers();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const { answers, setAnswer, updateCustomText, resetAnswers } =
@@ -80,6 +63,18 @@ const Vaalikone = () => {
 
   // Älä näytä vastausvaihtoehtoa ennen valintaa
   const [selectedAnswer, setSelectedAnswer] = useState<number>(0);
+
+  useEffect(() => {
+    const loadQuestions = async () => {
+      const questionSet = await fetchQuestionSet(questionSetId);
+      if (questionSet) {
+        setQuestions(questionSet.questions); // Set the questions array from the fetched data
+      }
+      setLoading(false);
+    };
+
+    loadQuestions();
+  }, []);
 
   const handleCustomTextChange = (questionId: number, text: string) => {
     updateCustomText(questionId, text);
@@ -100,7 +95,6 @@ const Vaalikone = () => {
     //console.log('Fetched candidates: ', candidates);
     //console.log("Finding matches for: ", answers);
     //console.log("Comparing to: ", candidates);
-    saveQuestionSet();
 
     setTimeout(() => {
       if (currentQuestionIndex < questions.length - 1) {
@@ -132,6 +126,8 @@ const Vaalikone = () => {
     //setMatches(userMatches);
     //console.log("Matches:", userMatches);
   };
+
+  if (loading) return <p>Loading questions...</p>;
 
   return (
     <Container maxWidth="md">
