@@ -5,7 +5,17 @@ import Home from './components/home';
 import Vaalikone from './components/vaalikone';
 import Vieraat from './components/vieraat';
 import Header from './components/header';
-import { Drawer, List, ListItemButton, ListItemText, ListItemIcon, IconButton, useMediaQuery, Box } from '@mui/material';
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemText,
+  ListItemIcon,
+  IconButton,
+  useMediaQuery,
+  Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import PollIcon from '@mui/icons-material/HowToVote';
@@ -37,7 +47,7 @@ export default function Page() {
       <Header initialUser={null} />
       <div style={{ display: 'flex' }}>
 
-        {/*!isMobile &&*/ (
+        {!isMobile && (
           <Drawer
             variant="permanent"
             open={isDrawerOpen}
@@ -72,6 +82,26 @@ export default function Page() {
             </List>
           </Drawer>
         )}
+
+        {isMobile && (
+          <BottomNavigation
+            value={currentPage}
+            onChange={(event, newValue) => handleNavigation(newValue)}
+            sx={{
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              width: '100%',
+              boxShadow: '0 -1px 6px rgba(0, 0, 0, 0.1)',
+            }}
+          >
+            <BottomNavigationAction label="Etusivu" value="home" icon={<HomeIcon />} />
+            <BottomNavigationAction label="Vaalikone" value="vaalikone" icon={<PollIcon />} />
+            <BottomNavigationAction label="Vieraat" value="vieraat" icon={<PeopleIcon />} />
+          </BottomNavigation>
+        )}
+
        {/* {isMobile && !isDrawerOpen && (
           <IconButton onClick={toggleDrawer} aria-label="menu">
             <MenuIcon />

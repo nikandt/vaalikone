@@ -1,6 +1,19 @@
 'use client';
 import { useState } from 'react';
-import { Container, Card, LinearProgress, TextField, Typography, Button, Slider, Box, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import {
+  Container,
+  Card,
+  LinearProgress,
+  TextField,
+  Typography,
+  Button,
+  Slider,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { motion, AnimatePresence } from 'framer-motion';
