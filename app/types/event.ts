@@ -12,6 +12,5 @@ export interface Event {
     };
     title: string;
     playlist: string;
-    guests: [{}];
   }
   

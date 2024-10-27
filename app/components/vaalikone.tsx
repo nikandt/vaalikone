@@ -65,7 +65,8 @@ const Vaalikone = () => {
   // Älä näytä vastausvaihtoehtoa ennen valintaa
   const [selectedAnswer, setSelectedAnswer] = useState<number>(0);
 
-  const [customText, setCustomText] = useState<string>('');
+  //const [customText, setCustomText] = useState<string>('');
+  const [setCustomText] = useState<string>('');
 
   const [animationDirection, setAnimationDirection] = useState("forward"); // Tracks animation direction
 
