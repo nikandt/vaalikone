@@ -11,9 +11,10 @@ import { Match } from '../types/matchers';
 // Käyttäjän vastaukset
 import { useUserAnswersStore } from '../data/useUserAnswersStore';
 
-// Firebase test
-import { saveQuestionnaireAnswers } from '../lib/firebase/firestore';
+// Firebase 
+import { saveQuestionnaireAnswers, saveQuestionSet } from '../lib/firebase/firestore';
 import { useState } from 'react';
+
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   Box,
@@ -90,15 +91,16 @@ const Vaalikone = () => {
 
     // Calculate matches
     const currentMatches = findMatches(answers, candidates);
-    console.log(
+    /*console.log(
       'Matches after question',
       currentQuestionIndex + 1,
       ':',
       currentMatches,
-    );
-
+    );*/
+    //console.log('Fetched candidates: ', candidates);
     //console.log("Finding matches for: ", answers);
     //console.log("Comparing to: ", candidates);
+    saveQuestionSet();
 
     setTimeout(() => {
       if (currentQuestionIndex < questions.length - 1) {
