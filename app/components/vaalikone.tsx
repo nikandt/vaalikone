@@ -65,6 +65,8 @@ const Vaalikone = () => {
   // Älä näytä vastausvaihtoehtoa ennen valintaa
   const [selectedAnswer, setSelectedAnswer] = useState<number>(0);
 
+  const [customText, setCustomText] = useState<string>('');
+
   const [animationDirection, setAnimationDirection] = useState("forward"); // Tracks animation direction
 
 
@@ -72,7 +74,7 @@ const Vaalikone = () => {
     const loadQuestions = async () => {
       const questionSet = await fetchQuestionSet(questionSetId);
       if (questionSet) {
-        setQuestions(questionSet.questions); // Set the questions array from the fetched data
+        setQuestions(questionSet.questions);
       }
       setLoading(false);
     };
@@ -84,13 +86,15 @@ const Vaalikone = () => {
     const prevAnswer = answers.find((a) => a.questionId === questions[currentQuestionIndex]?.id)?.answer;
     if (prevAnswer) {
       setSelectedAnswer(prevAnswer);
+      setCustomText(prevAnswer.customText || '');
     } else {
       setSelectedAnswer(0);
     }
   }, [currentQuestionIndex]);
 
-  const handleCustomTextChange = (questionId: number, text: string) => {
-    updateCustomText(questionId, text);
+  const handleCustomTextChange = (text: string) => {
+    setCustomText(text);
+    updateCustomText(questions[currentQuestionIndex].id, text);
   };
 
   const handleAnswer = (selectedAnswer: number) => {
