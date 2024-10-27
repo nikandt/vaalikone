@@ -6,6 +6,7 @@ import { ANSWER_LABELS } from '../types/answer_labels';
 import { Answer } from '../types/answers';
 import { Candidate } from '../types/candidate';
 import { Match } from '../types/matchers';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // Käyttäjän vastaukset
 import { useUserAnswersStore } from '../data/useUserAnswersStore';
@@ -64,6 +65,9 @@ const Vaalikone = () => {
   // Älä näytä vastausvaihtoehtoa ennen valintaa
   const [selectedAnswer, setSelectedAnswer] = useState<number>(0);
 
+  const [animationDirection, setAnimationDirection] = useState("forward"); // Tracks animation direction
+
+
   useEffect(() => {
     const loadQuestions = async () => {
       const questionSet = await fetchQuestionSet(questionSetId);
@@ -76,6 +80,15 @@ const Vaalikone = () => {
     loadQuestions();
   }, []);
 
+  useEffect(() => {
+    const prevAnswer = answers.find((a) => a.questionId === questions[currentQuestionIndex]?.id)?.answer;
+    if (prevAnswer) {
+      setSelectedAnswer(prevAnswer);
+    } else {
+      setSelectedAnswer(0);
+    }
+  }, [currentQuestionIndex]);
+
   const handleCustomTextChange = (questionId: number, text: string) => {
     updateCustomText(questionId, text);
   };
@@ -86,16 +99,8 @@ const Vaalikone = () => {
 
     // Calculate matches
     const currentMatches = findMatches(answers, candidates);
-    /*console.log(
-      'Matches after question',
-      currentQuestionIndex + 1,
-      ':',
-      currentMatches,
-    );*/
-    //console.log('Fetched candidates: ', candidates);
-    //console.log("Finding matches for: ", answers);
-    //console.log("Comparing to: ", candidates);
 
+    setAnimationDirection("forward");
     setTimeout(() => {
       if (currentQuestionIndex < questions.length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -106,6 +111,13 @@ const Vaalikone = () => {
       }
       setSelectedAnswer(0);
     }, 500);
+  };
+
+  const handleGoBack = () => {
+    if (currentQuestionIndex > 0) {
+      setAnimationDirection("backward"); // Set direction to backward
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
   };
 
   const handleRedo = () => {
@@ -137,6 +149,7 @@ const Vaalikone = () => {
           {Math.round(progress)}%
         </Typography>
       </Box>
+      
       <AnimatePresence>
         {!isComplete &&
           questions.map(
@@ -150,17 +163,14 @@ const Vaalikone = () => {
                     height: '100%',
                   }}
                 >
-                  <motion.div
-                    initial={{
-                      opacity: 0,
-                      y: 50,
-                      position: 'absolute',
-                      width: '100%',
-                    }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -50 }}
-                    transition={{ duration: 0.3 }}
-                  >
+                <motion.div
+                  initial={{ opacity: 0, y: animationDirection === "forward" ? 50 : -50, position: 'absolute', width: '100%' }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: animationDirection === "forward" ? -50 : 50 }}
+                  transition={{ duration: 0.3 }}
+                >
+
+
                     <Card
                       variant="outlined"
                       style={{
@@ -170,6 +180,7 @@ const Vaalikone = () => {
                         paddingBottom: '3.5em',
                       }}
                     >
+                      
                       <Box
                         display="flex"
                         alignItems="center"
@@ -256,6 +267,15 @@ const Vaalikone = () => {
                         }
                       />
                     </Box>
+                    <Box display="flex" justifyContent="left" mt={2}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={handleGoBack}
+                      startIcon={<ArrowBackIcon />} // Adds the return icon to the button
+                    >
+                    </Button>
+                  </Box>
                   </motion.div>
                 </Box>
               ),
