@@ -3,7 +3,7 @@ import { create } from 'zustand';
 interface Answer {
   questionId: number;
   answer: number;
-  customText?: string
+  customText?: string;
 }
 
 interface UserAnswersStore {
@@ -19,17 +19,20 @@ export const useUserAnswersStore = create<UserAnswersStore>((set) => ({
   setAnswer: (newAnswer) =>
     set((state) => {
       const updatedAnswers = state.answers.filter(
-        (answer) => answer.questionId !== newAnswer.questionId
+        (answer) => answer.questionId !== newAnswer.questionId,
       );
       return { answers: [...updatedAnswers, newAnswer] };
     }),
-    updateCustomText: (questionId, text) => set((state) => {
-        const answerIndex = state.answers.findIndex((a) => a.questionId === questionId);
-        if (answerIndex !== -1) {
-          state.answers[answerIndex].customText = text;
-        }
-        return { answers: [...state.answers] };
-      }),
+  updateCustomText: (questionId, text) =>
+    set((state) => {
+      const answerIndex = state.answers.findIndex(
+        (a) => a.questionId === questionId,
+      );
+      if (answerIndex !== -1) {
+        state.answers[answerIndex].customText = text;
+      }
+      return { answers: [...state.answers] };
+    }),
 
   resetAnswers: () => set({ answers: [] }),
 }));

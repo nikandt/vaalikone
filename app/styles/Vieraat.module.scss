@@ -1,92 +1,91 @@
 .users {
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-  
-    .controls {
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+
+    .searchBar {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap; /* Allow wrapping for smaller screens */
-  
-      .searchBar {
-        display: flex;
-        align-items: center;
-        background-color: #fff;
-        padding: 10px;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        width: 250px;
-  
-        input {
-          border: none;
-          outline: none;
-          width: 100%;
-          padding-left: 10px;
-          font-size: 1rem;
-        }
-  
-        .searchIcon {
-          font-size: 1.2rem;
-          color: #888;
-        }
-      }
-  
-      .sortBy {
-        display: flex;
-        align-items: center;
-    
-        p {
-          margin-right: 10px;
-          font-weight: bold;
-        }
-    
-      }
-  
-      @media (max-width: 768px) {
-        flex-direction: column; /* Stack everything vertically on mobile */
-        align-items: flex-start;
-  
-        .searchBar {
-          width: 100%; /* Full width on mobile */
-          margin-bottom: 10px; /* Add space between search bar and sortBy section */
-        }
-  
-        .sortBy {
-          width: 100%; /* Ensure sort buttons are full-width */
-          display: flex;
-          justify-content: flex-start;
-        }
-      }
-    }
-  
-    .userList {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-    }
-  
-    .userCard {
       background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  
-      h2 {
-        margin-bottom: 10px;
-        font-size: 1.5rem;
-      }
-  
-      p {
-        margin-bottom: 8px;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 250px;
+
+      input {
+        border: none;
+        outline: none;
+        width: 100%;
+        padding-left: 10px;
         font-size: 1rem;
-  
-        strong {
-          color: #2c3e50;
-        }
+      }
+
+      .searchIcon {
+        font-size: 1.2rem;
+        color: #888;
+      }
+    }
+
+    .sortBy {
+      display: flex;
+      align-items: center;
+
+      p {
+        margin-right: 10px;
+        font-weight: bold;
+      }
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column; /* Stack everything vertically on mobile */
+      align-items: flex-start;
+
+      .searchBar {
+        width: 100%; /* Full width on mobile */
+        margin-bottom: 10px; /* Add space between search bar and sortBy section */
+      }
+
+      .sortBy {
+        width: 100%; /* Ensure sort buttons are full-width */
+        display: flex;
+        justify-content: flex-start;
       }
     }
   }
+
+  .userList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .userCard {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+    }
+
+    p {
+      margin-bottom: 8px;
+      font-size: 1rem;
+
+      strong {
+        color: #2c3e50;
+      }
+    }
+  }
+}

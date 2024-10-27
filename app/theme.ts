@@ -4,17 +4,17 @@ const theme = createTheme({
   palette: {
     primary: {
       main: '#3cbdb2',
-      contrastText: '#fff', 
+      contrastText: '#fff',
     },
     secondary: {
       main: '#888',
-      contrastText: '#fff', 
+      contrastText: '#fff',
     },
     background: {
       default: '#f5f5f5',
     },
     text: {
-      primary: '#333', 
+      primary: '#333',
       secondary: '#888',
     },
   },
@@ -22,7 +22,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: 'none', 
+          textTransform: 'none',
         },
       },
     },
@@ -37,12 +37,12 @@ const theme = createTheme({
           },
         },
         track: {
-          display: 'none', 
+          display: 'none',
           boxShadow: 'none !important',
           outline: 'none !important',
         },
         rail: {
-          backgroundColor: '#ccc', 
+          backgroundColor: '#ccc',
           opacity: 1,
           boxShadow: 'none !important',
           outline: 'none !important',
@@ -50,7 +50,7 @@ const theme = createTheme({
         thumb: {
           backgroundColor: '#3cbdb2',
           boxShadow: 'none',
-          border: 'none', 
+          border: 'none',
           '&:hover, &:active, &.Mui-focusVisible': {
             boxShadow: 'none !important',
           },
@@ -71,8 +71,8 @@ const theme = createTheme({
           outline: 'none !important',
         },
         markLabel: {
-          whiteSpace: 'pre-line', 
-          textAlign: 'center', 
+          whiteSpace: 'pre-line',
+          textAlign: 'center',
           outline: 'none !important',
           marginTop: '8px',
           boxShadow: 'none !important',

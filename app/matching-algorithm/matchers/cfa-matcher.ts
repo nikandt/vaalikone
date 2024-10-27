@@ -1,36 +1,35 @@
+import { distanceToPercentage } from './manhattan-matcher';
 import { computeEuclideanDistance } from '../distances/euclidean-distance';
 import { FactorPoints } from '../types/factor-points';
 import { Match } from '../types/matchers';
 import { createVector } from '../types/vector';
-import { distanceToPercentage } from './manhattan-matcher';
-
 
 // As mentioned above, this would be calculated using the
 // r code in the repo.
 export const maxCfaDistance = computeEuclideanDistance(
-  createVector(createVector(-1, -1), createVector(1, 1))
+  createVector(createVector(-1, -1), createVector(1, 1)),
 );
 
 export const doCfaMatch = (
   firstAnswererFactorPoints: FactorPoints,
-  secondAnswerer: { id: string; factorPoints: FactorPoints }
+  secondAnswerer: { id: string; factorPoints: FactorPoints },
 ): Match => {
   // These are the dimensions in the 2023 parliamentary elections, could
   // be something else in the future
   const electionDimensions = [
     'Vasemmisto-Oikeisto',
-    'Liberaalivihreä-Kansalliskonservatiivi'
+    'Liberaalivihreä-Kansalliskonservatiivi',
   ];
   // Create the vectors for comparison
   const firstAnswersArray = electionDimensions.map((dimension) =>
     typeof firstAnswererFactorPoints[dimension] === 'number'
       ? firstAnswererFactorPoints[dimension]
-      : 'noAnswers'
+      : 'noAnswers',
   );
   const secondAnswersArray = electionDimensions.map((dimension) =>
     typeof secondAnswerer.factorPoints[dimension] === 'number'
       ? secondAnswerer.factorPoints[dimension]
-      : 'noAnswers'
+      : 'noAnswers',
   );
 
   const noAnswersRemovedFirstAnswererDimenstions: number[] = [];
@@ -44,7 +43,7 @@ export const doCfaMatch = (
     ) {
       noAnswersRemovedFirstAnswererDimenstions.push(value);
       noAnswersRemovedSecondAnswererDimensions.push(
-        secondAnswersArray[index] as number
+        secondAnswersArray[index] as number,
       );
     } else if (
       typeof value === 'number' &&
@@ -61,12 +60,12 @@ export const doCfaMatch = (
     computeEuclideanDistance(
       createVector(
         createVector(...noAnswersRemovedFirstAnswererDimenstions),
-        createVector(...noAnswersRemovedSecondAnswererDimensions)
-      )
+        createVector(...noAnswersRemovedSecondAnswererDimensions),
+      ),
     ) + secondAnswererNumberOfNoAnswer;
   return {
     secondAnswererId: secondAnswerer.id,
     distance,
-    percentage: distanceToPercentage(distance, maxDistance)
+    percentage: distanceToPercentage(distance, maxDistance),
   };
 };

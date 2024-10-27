@@ -6,7 +6,7 @@ export interface Vector<T extends unknown, L extends number> extends Array<T> {
   0: T;
   length: L;
   map: <U>(
-    callback: (item: T, index: number, vector: Vector<T, L>) => U
+    callback: (item: T, index: number, vector: Vector<T, L>) => U,
   ) => Vector<U, L>;
 }
 

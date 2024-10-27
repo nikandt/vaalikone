@@ -1,7 +1,7 @@
 //import { doCfaMatch, maxCfaDistance } from '../matchers/cfa-matcher';
 import {
   /*distanceToPercentage,*/
-  doManhattanMatch
+  doManhattanMatch,
 } from '../matchers/manhattan-matcher';
 import { Answer } from '../types/answers';
 import { Candidate } from '../types/candidate';
@@ -18,10 +18,10 @@ import { Match } from '../types/matchers';
  */
 export const matchCandidates = (
   citizenAnswers: Answer[],
-  candidates: Candidate[]
+  candidates: Candidate[],
 ): Match[] => {
   const manhattanMatches = candidates.map((candidate) =>
-    doManhattanMatch({ answers: citizenAnswers }, candidate)
+    doManhattanMatch({ answers: citizenAnswers }, candidate),
   );
   manhattanMatches.sort((a, b) => a.distance - b.distance);
   return manhattanMatches;

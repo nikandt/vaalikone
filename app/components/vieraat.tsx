@@ -1,11 +1,17 @@
-import { useState, useEffect } from 'react';
 import styles from '../styles/Vieraat.module.scss';
-import { FaSearch } from 'react-icons/fa';
-import { Button, Card, CardContent, Typography, Container } from '@mui/material';
-
 import { User } from '../types/user';
-
 import { useUsers } from '../data/users';
+import {
+  Button,
+  Card,
+  CardContent,
+  Container,
+  Typography,
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { FaSearch } from 'react-icons/fa';
+
+
 //import { useUserAnswersStore } from '../data/useUserAnswersStore';
 
 const Vieraat: React.FC = () => {
@@ -17,7 +23,7 @@ const Vieraat: React.FC = () => {
 
   useEffect(() => {
     let updatedUsers = users.filter((user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase())
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
     updatedUsers = updatedUsers.sort((a, b) => {
@@ -39,9 +45,7 @@ const Vieraat: React.FC = () => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
     setFilteredUsers(
-      users.filter((user) =>
-        user.name.toLowerCase().includes(term)
-      )
+      users.filter((user) => user.name.toLowerCase().includes(term)),
     );
   };
 

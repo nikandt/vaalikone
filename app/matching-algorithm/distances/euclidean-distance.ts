@@ -1,7 +1,7 @@
-import type { Vector } from '../types/vector';
 import { squaredDifference } from '../utils/squaredDifference';
 import { sum } from '../utils/sum';
 import { mapOverVectors } from '../utils/vector-map';
+import type { Vector } from '../types/vector';
 
 /**
  * Compute the euclidean distance of two vectors in D dimensions.
@@ -14,7 +14,7 @@ import { mapOverVectors } from '../utils/vector-map';
  * @returns euclidean distance between the vectors
  */
 export const computeEuclideanDistance = <D extends number>(
-  vectors: Vector<Vector<number, D>, 2>
+  vectors: Vector<Vector<number, D>, 2>,
 ) => {
   if (vectors.length !== 2) {
     throw Error('Need two vectors for euclidean distance calculation');
@@ -23,7 +23,7 @@ export const computeEuclideanDistance = <D extends number>(
     throw Error('Vectors are of different length for euclidean distance');
   }
   const differences = mapOverVectors<number, D, 2>(vectors, (crossSection) =>
-    Math.abs(squaredDifference(crossSection))
+    Math.abs(squaredDifference(crossSection)),
   );
   const sumOfDifferences = sum(differences);
   const squareRootOfSumOfDifferences = Math.sqrt(sumOfDifferences);
