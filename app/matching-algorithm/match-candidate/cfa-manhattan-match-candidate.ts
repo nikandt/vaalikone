@@ -1,7 +1,7 @@
 import { doCfaMatch, maxCfaDistance } from '../matchers/cfa-matcher';
 import {
   distanceToPercentage,
-  doManhattanMatch
+  doManhattanMatch,
 } from '../matchers/manhattan-matcher';
 import { Answer } from '../types/answers';
 import { Candidate } from '../types/candidate';
@@ -35,23 +35,23 @@ export const matchCandidates = (
   // of the ids was incorrectly set, and this caused that question to weigh in
   // on both the factor analysis and manhattan distance, causing some extra
   // weight to be put on it. This was fixed immediately on discovery.
-  manhattanIds: number[]
+  manhattanIds: number[],
 ): Match[] => {
   const cfaMatches = candidates.map((candidate) =>
-    doCfaMatch(citizenFactorPoints, candidate)
+    doCfaMatch(citizenFactorPoints, candidate),
   );
   const citizenManhattanAnswers = citizenAnswers.filter((answer) =>
-    manhattanIds.includes(answer.questionId)
+    manhattanIds.includes(answer.questionId),
   );
   const manhattanMatches = candidates.map((candidate) =>
-    doManhattanMatch({ answers: citizenManhattanAnswers }, candidate)
+    doManhattanMatch({ answers: citizenManhattanAnswers }, candidate),
   );
   const manhattanMatchMap: Record<string, Match> = manhattanMatches.reduce(
     (prev, curr) => {
       prev[curr.secondAnswererId] = curr;
       return prev;
     },
-    {} as Record<string, Match>
+    {} as Record<string, Match>,
   );
   // Since not all answers measure the value dimensions, we need to combine
   // the value dimensions with the fact questions.
@@ -69,7 +69,7 @@ export const matchCandidates = (
             0,
             citizenManhattanAnswers.length * 4,
             0,
-            maxCfaDistance
+            maxCfaDistance,
           );
     const cfaWeight =
       (citizenAnswers.length - citizenManhattanAnswers.length) /
@@ -82,7 +82,7 @@ export const matchCandidates = (
     return {
       distance: newDistance,
       percentage: distanceToPercentage(newDistance, maxCfaDistance),
-      secondAnswererId: cfaMatch.secondAnswererId
+      secondAnswererId: cfaMatch.secondAnswererId,
     };
   });
   combinedMatches.sort((a, b) => a.distance - b.distance);

@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
 import { sampleAnswersList } from './answers';
 import { User } from '../types/user';
+import { useEffect, useState } from 'react';
 
 const assignAnswersToUser = (user: User, index: number): User => {
-    const answers = sampleAnswersList[index % sampleAnswersList.length] || [];
-    return { ...user, answers };
-  };
+  const answers = sampleAnswersList[index % sampleAnswersList.length] || [];
+  return { ...user, answers };
+};
 
 export const useUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -15,7 +15,9 @@ export const useUsers = () => {
     fetch('https://jsonplaceholder.typicode.com/users')
       .then((response) => response.json())
       .then((data) => {
-        const usersWithAnswers = data.map((user: User, index: number) => assignAnswersToUser(user, index));
+        const usersWithAnswers = data.map((user: User, index: number) =>
+          assignAnswersToUser(user, index),
+        );
         setUsers(usersWithAnswers);
         setLoading(false);
       });

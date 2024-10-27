@@ -1,4 +1,4 @@
 export interface Answer {
-    questionId: number;
-    answer: number;
-  }
+  questionId: number;
+  answer: number;
+}

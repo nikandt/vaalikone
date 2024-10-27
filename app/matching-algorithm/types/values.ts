@@ -1,3 +1,3 @@
 export type Values = {
-  [key: string]: number | "noAnswers";
+  [key: string]: number | 'noAnswers';
 };

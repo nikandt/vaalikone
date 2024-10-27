@@ -25,4 +25,4 @@ export interface ValueQuestion extends BaseQuestion {
 export type Question = ValueQuestion | FactQuestion;
 
 export const isValueQuestion = (value: Question): value is ValueQuestion =>
-  "valueDetails" in value;
+  'valueDetails' in value;

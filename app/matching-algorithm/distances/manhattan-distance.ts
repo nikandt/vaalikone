@@ -1,7 +1,7 @@
-import type { Vector } from '../types/vector';
 import { difference } from '../utils/difference';
 import { sum } from '../utils/sum';
 import { mapOverVectors } from '../utils/vector-map';
+import type { Vector } from '../types/vector';
 
 /**
  * Compute the manhattan distance of two vectors in D dimensions.
@@ -16,7 +16,7 @@ import { mapOverVectors } from '../utils/vector-map';
  * @returns manhattan distance of vectors
  */
 export const computeManhattanDistance = <D extends number>(
-  vectors: Vector<Vector<number, D>, 2>
+  vectors: Vector<Vector<number, D>, 2>,
 ) => {
   if (vectors.length !== 2) {
     throw Error('Need two vectors for manhattan distance calculation');
@@ -25,7 +25,7 @@ export const computeManhattanDistance = <D extends number>(
     throw Error('Vectors are of different length for manhattan distance');
   }
   const differences = mapOverVectors<number, D, 2>(vectors, (crossSection) =>
-    Math.abs(difference(crossSection))
+    Math.abs(difference(crossSection)),
   );
   const sumOfDifferences = sum(differences);
   return sumOfDifferences;

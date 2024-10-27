@@ -1,19 +1,23 @@
 // 'use client';
-import { useState, useEffect, MouseEvent } from 'react';
-import { useRouter } from 'next/navigation';
-import { signInWithGoogle, signOut, onAuthStateChanged } from '../lib/firebase/auth';
+import {
+  onAuthStateChanged,
+  signInWithGoogle,
+  signOut,
+} from '../lib/firebase/auth';
 import { firebaseConfig } from '../lib/firebase/config';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useRouter } from 'next/navigation';
+import { MouseEvent, useEffect, useState } from 'react';
 
 import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Button from '@mui/material/Button';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 
 interface User {
   displayName: string | null;
@@ -27,17 +31,30 @@ function useUserSession(initialUser: User | null) {
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-      const serializedConfig = encodeURIComponent(JSON.stringify(firebaseConfig));
+      const serializedConfig = encodeURIComponent(
+        JSON.stringify(firebaseConfig),
+      );
       const swUrl = `/auth-service-worker.js?firebaseConfig=${serializedConfig}`;
-      navigator.serviceWorker.register(swUrl).then(registration => {
-        console.log("Service Worker registered with scope:", registration.scope);
+      navigator.serviceWorker.register(swUrl).then((registration) => {
+        console.log(
+          'Service Worker registered with scope:',
+          registration.scope,
+        );
       });
     }
   }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged((authUser: User | null) => {
-      setUser(authUser ? { displayName: authUser.displayName, email: authUser.email, photoURL: authUser.photoURL } : null);
+      setUser(
+        authUser
+          ? {
+              displayName: authUser.displayName,
+              email: authUser.email,
+              photoURL: authUser.photoURL,
+            }
+          : null,
+      );
     });
     return () => unsubscribe();
   }, []);
@@ -55,7 +72,6 @@ function useUserSession(initialUser: User | null) {
 const Header: React.FC<{ initialUser: User | null }> = ({ initialUser }) => {
   const user = useUserSession(initialUser);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
 
   const handleSignOut = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -76,16 +92,21 @@ const Header: React.FC<{ initialUser: User | null }> = ({ initialUser }) => {
   };
 
   return (
-<AppBar position="static" sx={{ backgroundColor: '#385574' }}>
+    <AppBar position="static" sx={{ backgroundColor: '#385574' }}>
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
- 
-        </Typography>
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}
+        />
 
         {user ? (
           <>
             <IconButton onClick={handleMenuOpen} color="inherit">
-              <Avatar src={user.photoURL || '/profile.svg'} alt={user.email || 'User'} />
+              <Avatar
+                src={user.photoURL || '/profile.svg'}
+                alt={user.email || 'User'}
+              />
             </IconButton>
             <Menu
               anchorEl={anchorEl}
@@ -99,7 +120,11 @@ const Header: React.FC<{ initialUser: User | null }> = ({ initialUser }) => {
             </Menu>
           </>
         ) : (
-            <Button color="inherit" onClick={handleSignIn} startIcon={<FontAwesomeIcon icon={faSignInAlt} />}>
+          <Button
+            color="inherit"
+            onClick={handleSignIn}
+            startIcon={<FontAwesomeIcon icon={faSignInAlt} />}
+          >
             Login
           </Button>
         )}

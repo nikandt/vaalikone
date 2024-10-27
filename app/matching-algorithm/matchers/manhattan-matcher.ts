@@ -1,21 +1,21 @@
 import { computeManhattanDistance } from '../distances/manhattan-distance';
-import { FullAnswer, Answer, isEmptyAnswer } from '../types/answers';
+import { Answer, FullAnswer, isEmptyAnswer } from '../types/answers';
 import {
   ElectionConfig,
   Value,
   ValueQuestion,
-  isValueQuestion
+  isValueQuestion,
 } from '../types/configuration';
 import { FirstAnswerer, Match, SecondAnswerer } from '../types/matchers';
 import { Values } from '../types/values';
 import { createVector } from '../types/vector';
-import mapValues from 'lodash/mapValues';
 
 import { scale } from '../utils/scale';
+import mapValues from 'lodash/mapValues';
 
 const fillInEmptyAnswer = (questionId: number): FullAnswer => ({
   questionId,
-  emptyAnswer: true
+  emptyAnswer: true,
 });
 
 /**
@@ -28,17 +28,17 @@ const fillInEmptyAnswer = (questionId: number): FullAnswer => ({
  */
 const filterSecondAnswersByFirstAnswers = (
   firstAnswers: Answer[],
-  secondAnswers: FullAnswer[]
+  secondAnswers: FullAnswer[],
 ): FullAnswer[] => {
   const firstAnswerQuestionIds = firstAnswers.map(
-    (answer) => answer.questionId
+    (answer) => answer.questionId,
   );
   const filteredSecondAnswers = secondAnswers.filter((answer) =>
-    firstAnswerQuestionIds.includes(answer.questionId)
+    firstAnswerQuestionIds.includes(answer.questionId),
   );
   if (filteredSecondAnswers.length !== firstAnswers.length) {
     const filteredSecondAnswerQuestionIds = filteredSecondAnswers.map(
-      (answer) => answer.questionId
+      (answer) => answer.questionId,
     );
     firstAnswers.forEach((firstAnswer) => {
       if (!filteredSecondAnswerQuestionIds.includes(firstAnswer.questionId)) {
@@ -63,17 +63,17 @@ const filterSecondAnswersByFirstAnswers = (
  */
 const addMaxDistanceToSecondAnswers = (
   firstAnswers: Answer[],
-  secondAnswers: FullAnswer[]
+  secondAnswers: FullAnswer[],
 ): Answer[] => {
   return secondAnswers.map((secondAnswer) => {
     const correspondingCitizenAnswer = firstAnswers.find(
-      (firstAnswer) => firstAnswer.questionId === secondAnswer.questionId
+      (firstAnswer) => firstAnswer.questionId === secondAnswer.questionId,
     ) as Answer;
     return {
       ...secondAnswer,
       answer: isEmptyAnswer(secondAnswer)
         ? correspondingCitizenAnswer.answer + 5
-        : secondAnswer.answer
+        : secondAnswer.answer,
     };
   });
 };
@@ -92,41 +92,41 @@ export const distanceToPercentage = (distance: number, maxDistance: number) =>
  */
 export const doManhattanMatch = (
   firstAnswerer: FirstAnswerer,
-  seconAnswerer: SecondAnswerer
+  seconAnswerer: SecondAnswerer,
 ): Match => {
   const firstAnswers = firstAnswerer.answers;
   const secondAnswers = seconAnswerer.answers;
   firstAnswers.sort((a, b) => a.questionId - b.questionId);
   secondAnswers.sort((a, b) => a.questionId - b.questionId);
   const firstAnswerVector = createVector(
-    ...firstAnswerer.answers.map((answer) => answer.answer)
+    ...firstAnswerer.answers.map((answer) => answer.answer),
   );
 
   const maxDistance = computeManhattanDistance(
     createVector(
       createVector(...Array(firstAnswers.length).fill(1)),
-      createVector(...Array(firstAnswers.length).fill(5))
-    )
+      createVector(...Array(firstAnswers.length).fill(5)),
+    ),
   );
   const sharedAnswers = filterSecondAnswersByFirstAnswers(
     firstAnswers,
-    secondAnswers
+    secondAnswers,
   );
   const emptyAnswersFilledIn = addMaxDistanceToSecondAnswers(
     firstAnswers,
-    sharedAnswers
+    sharedAnswers,
   );
   const secondAnswerVector = createVector(
-    ...emptyAnswersFilledIn.map((answer) => answer.answer)
+    ...emptyAnswersFilledIn.map((answer) => answer.answer),
   );
   const distance = computeManhattanDistance(
-    createVector(firstAnswerVector, secondAnswerVector)
+    createVector(firstAnswerVector, secondAnswerVector),
   );
   const percentage = distanceToPercentage(distance, maxDistance);
   return {
     secondAnswererId: seconAnswerer.id,
     distance,
-    percentage
+    percentage,
   };
 };
 
@@ -139,7 +139,7 @@ const flipAnswer: { [key: number]: number } = {
   2: 4,
   3: 3,
   4: 2,
-  5: 1
+  5: 1,
 };
 
 /**
@@ -151,12 +151,12 @@ const flipAnswer: { [key: number]: number } = {
  */
 export const doManhattanValues = (
   answers: Answer[],
-  configuration: ElectionConfig
+  configuration: ElectionConfig,
 ): Values => {
   // First, separate the value questions from the questions that
   // are not used for value calculations
   const valueQuestions = configuration.electionMachineQuestions.filter(
-    (question) => isValueQuestion(question)
+    (question) => isValueQuestion(question),
   ) as ValueQuestion[];
 
   // Cast to ValueQuestion should be fine, since we filter by the same id as we flatten later.
@@ -167,24 +167,24 @@ export const doManhattanValues = (
       const questions = valueQuestions.filter((question) =>
         question.valueDetails
           .map((details) => details.valueId)
-          .includes(curr.id)
+          .includes(curr.id),
       );
       const flattenedValueDetails = questions.map((question) => ({
         ...question,
         valueDetails: question.valueDetails.filter(
-          (details) => details.valueId === curr.id
-        )
+          (details) => details.valueId === curr.id,
+        ),
       }));
       return { ...prev, [curr.name]: flattenedValueDetails };
     }, {});
 
   return mapValues(questionsByValue, (questions) => {
     const filteredQuestions = questions.filter((question) =>
-      answers.map((answer) => answer.questionId).includes(question.id)
+      answers.map((answer) => answer.questionId).includes(question.id),
     );
     // Due to filtering above, find should always work
     const filteredAnswers = filteredQuestions.map((question) =>
-      answers.find((answer) => answer.questionId === question.id)
+      answers.find((answer) => answer.questionId === question.id),
     ) as Answer[];
     if (filteredAnswers.length === 0) {
       return 'noAnswers';
@@ -192,15 +192,15 @@ export const doManhattanValues = (
     // Compute the sum variables
     const answerSum = filteredAnswers.reduce((prev, curr) => {
       const question = questions.find(
-        (question) => question.id === curr.questionId
+        (question) => question.id === curr.questionId,
       ) as ValueQuestion;
       // The value details are flattened above
       const targetBound = question.valueDetails[0].targetBound;
       const value = configuration.values.find(
-        (value) => value.id === question.valueDetails[0].valueId
+        (value) => value.id === question.valueDetails[0].valueId,
       ) as Value;
       const targetBoundIndex = value.bounds.findIndex(
-        (bound) => bound === targetBound
+        (bound) => bound === targetBound,
       );
       const answerToAggregate =
         targetBoundIndex === 1 ? curr.answer : flipAnswer[curr.answer];

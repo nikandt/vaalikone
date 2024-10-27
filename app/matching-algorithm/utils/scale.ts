@@ -3,7 +3,7 @@ export const scale = (
   fromLower: number,
   fromUpper: number,
   toLower: number,
-  toUpper: number
+  toUpper: number,
 ) => {
   return (
     ((input - fromLower) * (toUpper - toLower)) / (fromUpper - fromLower) +

@@ -1,5 +1,5 @@
-import type { Vector } from '../types/vector';
 import { createVector } from '../types/vector';
+import type { Vector } from '../types/vector';
 
 /**
  * Picks a cross section of L vectors in D dimensions from based on given index.
@@ -12,7 +12,7 @@ import { createVector } from '../types/vector';
  */
 const pickFromVectors = <T, D extends number, L extends number>(
   vectors: Vector<Vector<T, D>, L>,
-  index: number
+  index: number,
 ) => {
   return vectors.map((vector) => vector[index]);
 };
@@ -28,7 +28,7 @@ const pickFromVectors = <T, D extends number, L extends number>(
  */
 export const mapOverVectors = <T, D extends number, L extends number>(
   vectors: Vector<Vector<T, D>, L>,
-  callback: (crossSection: Vector<T, L>) => T
+  callback: (crossSection: Vector<T, L>) => T,
 ): Vector<T, D> => {
   if (!vectors.length) {
     return createVector<T, D>();
