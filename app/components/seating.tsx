@@ -1,13 +1,13 @@
 import { Box, Typography, CircularProgress } from '@mui/material';
 
 // Function to chunk an array into groups of 'size'
-function chunkArray(array, size) {
-  const result = [];
-  for (let i = 0; i < array.length; i += size) {
-    result.push(array.slice(i, i + size));
+function chunkArray<T>(array: T[], size: number): T[][] {
+    const result: T[][] = [];
+    for (let i = 0; i < array.length; i += size) {
+      result.push(array.slice(i, i + size));
+    }
+    return result;
   }
-  return result;
-}
 
 interface Match {
     distance: number;
