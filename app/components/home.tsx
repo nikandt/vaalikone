@@ -1,6 +1,6 @@
 import { useUsers } from '../data/users';
 import styles from '../styles/Home.module.scss';
-import { Box, Button, Card, CardContent, Typography, ListItem, ListItemText } from '@mui/material';
+import { Box, Button, Card, CardContent, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { fetchUserMatch } from '../lib/firebase/firestore';
