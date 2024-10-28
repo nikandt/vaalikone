@@ -23,10 +23,10 @@ function SeatingArrangement({ matches, currentUserId }) {
   );
 
   // Step 2: Group into tables of 4
-  const tables = chunkArray(sortedMatches, 4);
+  const tables = chunkArray<Match>(sortedMatches, 4);
 
   // Step 3: Group tables into columns of 3 tables per column
-  const columns = chunkArray(tables, 3);
+  const columns = chunkArray<Match[]>(tables, 3);
 
   return (
     <Box display="flex" gap={4} p={2}>
@@ -37,7 +37,7 @@ function SeatingArrangement({ matches, currentUserId }) {
               key={tableIndex} 
               display="grid" 
               gridTemplateColumns="repeat(2, 1fr)" 
-              gap={1}
+              gap={2}
               p={2}
               border="1px solid #ccc" 
               borderRadius={2}
