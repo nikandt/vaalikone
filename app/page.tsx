@@ -71,6 +71,8 @@ export default function Page() {
                 width: isDrawerOpen ? 240 : 60,
                 overflow: 'hidden',
                 transition: 'width 0.3s',
+                backgroundImage: 'linear-gradient(135deg, #3b8d99, #6b00b6)',
+                color: 'white',
               },
             }}
           >
@@ -82,15 +84,15 @@ export default function Page() {
             <List>
               <ListItemButton onClick={() => handleNavigation('home')}>
                 <ListItemIcon><HomeIcon /></ListItemIcon>
-                {isDrawerOpen && <ListItemText primary="Etusivu" />}
+                {isDrawerOpen && <ListItemText primary="Etusivu" sx={{ typography: 'h6', color: 'white' }}/>}
               </ListItemButton>
               <ListItemButton onClick={() => handleNavigation('vaalikone')}>
                 <ListItemIcon><PollIcon /></ListItemIcon>
-                {isDrawerOpen && <ListItemText primary="Vaalikone" />}
+                {isDrawerOpen && <ListItemText primary="Vaalikone" sx={{ typography: 'h6', color: 'white' }}/>}
               </ListItemButton>
               <ListItemButton onClick={() => handleNavigation('vieraat')}>
                 <ListItemIcon><PeopleIcon /></ListItemIcon>
-                {isDrawerOpen && <ListItemText primary="Vieraat" />}
+                {isDrawerOpen && <ListItemText primary="Vieraat" sx={{ typography: 'h6', color: 'white' }}/>}
               </ListItemButton>
             </List>
           </Drawer>
