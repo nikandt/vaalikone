@@ -12,7 +12,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useUserAnswersStore } from '../data/useUserAnswersStore';
 
 // Firebase 
-import { saveQuestionnaireAnswers, fetchQuestionSet } from '../lib/firebase/firestore';
+import { saveQuestionnaireAnswers, saveUserMatches, fetchQuestionSet } from '../lib/firebase/firestore';
 import { useState, useEffect } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
@@ -55,18 +55,14 @@ const Vaalikone = () => {
   const [loading, setLoading] = useState(true);
   const { users: candidates } = useUsers();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const { answers, setAnswer, updateCustomText, resetAnswers } =
+  const { answers, setAnswer, updateCustomText, resetAnswers, matches, setMatches } =
     useUserAnswersStore();
   //const [answers, setAnswers] = useState<Answer[]>(Array.from({ length: questions.length }, () => ({ questionId: 0, answer: 0 })));
   const [isComplete, setIsComplete] = useState(false);
-  const [matches, setMatches] = useState<Match[] | null>(null);
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   // Älä näytä vastausvaihtoehtoa ennen valintaa
   const [selectedAnswer, setSelectedAnswer] = useState<number>(0);
-
-  //const [customText, setCustomText] = useState<string>('');
-  const [setCustomText] = useState<string>('');
 
   const [animationDirection, setAnimationDirection] = useState("forward"); // Tracks animation direction
 
@@ -75,7 +71,7 @@ const Vaalikone = () => {
     const loadQuestions = async () => {
       const questionSet = await fetchQuestionSet(questionSetId);
       if (questionSet) {
-        setQuestions(questionSet.questions);
+        setQuestions(questionSet.questions); // Set the questions array from the fetched data
       }
       setLoading(false);
     };
@@ -87,15 +83,13 @@ const Vaalikone = () => {
     const prevAnswer = answers.find((a) => a.questionId === questions[currentQuestionIndex]?.id)?.answer;
     if (prevAnswer) {
       setSelectedAnswer(prevAnswer);
-      setCustomText(prevAnswer.customText || '');
     } else {
       setSelectedAnswer(0);
     }
   }, [currentQuestionIndex]);
 
-  const handleCustomTextChange = (text: string) => {
-    setCustomText(text);
-    updateCustomText(questions[currentQuestionIndex].id, text);
+  const handleCustomTextChange = (questionId: number, text: string) => {
+    updateCustomText(questionId, text);
   };
 
   const handleAnswer = (selectedAnswer: number) => {
@@ -112,6 +106,9 @@ const Vaalikone = () => {
       } else {
         setIsComplete(true);
         saveQuestionnaireAnswers(answers); // Save to firebase
+        saveUserMatches(currentMatches);
+        // Debug
+        //console.log("Matches: ", currentMatches);
         setMatches(currentMatches);
       }
       setSelectedAnswer(0);

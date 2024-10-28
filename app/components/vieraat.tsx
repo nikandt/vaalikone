@@ -1,6 +1,7 @@
 import styles from '../styles/Vieraat.module.scss';
 import { User } from '../types/user';
 import { useUsers } from '../data/users';
+import { auth } from '../lib/firebase/clientApp';
 import {
   Button,
   Card,
@@ -12,14 +13,51 @@ import { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 
 
-//import { useUserAnswersStore } from '../data/useUserAnswersStore';
+import { useUserAnswersStore } from '../data/useUserAnswersStore';
+import { fetchUserMatch } from '../lib/firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const Vieraat: React.FC = () => {
   const { users: users, loading } = useUsers();
+  const { matches } = useUserAnswersStore();
+
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'email'>('name');
   const [isAscending, setIsAscending] = useState(true);
+
+  const currentUser = auth.currentUser;
+  const [userId, setUserId] = useState<string | null>(null);
+  const [extraMatchData, setExtraMatchData] = useState<{ [key: string]: any }>({});
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        setUserId(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+
+  const getMatchData = async () => {
+    if (userId && !extraMatchData[userId]) {
+      const fetchedMatch = await fetchUserMatch(userId);
+      console.log(`Fetched match data for user ${userId}:`, fetchedMatch);
+      if (fetchedMatch) {
+        setExtraMatchData((prevData) => ({ ...prevData, [userId]: fetchedMatch }));
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (userId) {
+      getMatchData();
+    }
+  }, [userId]);
 
   useEffect(() => {
     let updatedUsers = users.filter((user) =>
@@ -51,7 +89,7 @@ const Vieraat: React.FC = () => {
 
   const getLastName = (name: string) => {
     const parts = name.split(' ');
-    return parts[parts.length - 1]; // Assume last word is the last name
+    return parts[parts.length - 1];
   };
 
   const handleSort = (field: 'name' | 'email') => {
@@ -107,16 +145,43 @@ const Vieraat: React.FC = () => {
         </div>
       </div>
       <div className={styles.userList}>
-        {filteredUsers.map((user) => (
-          <Card className={styles.userCard} key={user.id}>
-            <CardContent>
-              <Typography variant="h5">{user.name}</Typography>
-              <Typography variant="body2">
-                <strong>Sähköposti:</strong> {user.email}
+      {filteredUsers.map((user) => {
+      const match = matches.find((m) => m.secondAnswererId === user.id);
+
+      const dbMatchArray = extraMatchData[userId]?.matches;
+      const dbMatch = dbMatchArray ? dbMatchArray.find(
+        (m) => m.secondAnswererId === user.id
+      ) : null;
+
+      if (!match && !extraMatchData[user.id]) getMatchData();
+
+      return (
+        <Card className={styles.userCard} key={user.id}>
+          <CardContent>
+            <Typography variant="h5">{user.name}</Typography>
+            <Typography variant="body2">
+              <strong>Sähköposti:</strong> {user.email}
+            </Typography>
+
+            {match || dbMatch ? (
+              <>
+                <Typography variant="body2" color="textSecondary">
+                  <strong>Yhteensopivuus:</strong> {((match || dbMatch).percentage * 100).toFixed(1)}%
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  <strong>Etäisyys:</strong> {(match || dbMatch).distance}
+                </Typography>
+              </>
+            ) : (
+              <Typography variant="body2" color="textSecondary">
+                No match data available
               </Typography>
-            </CardContent>
-          </Card>
-        ))}
+            )}
+          </CardContent>
+        </Card>
+      );
+    })}
+
       </div>
     </Container>
   );

@@ -6,15 +6,24 @@ interface Answer {
   customText?: string;
 }
 
+interface Match {
+  secondAnswererId: number | string;
+  percentage: number;
+  distance: number;
+}
+
 interface UserAnswersStore {
   answers: Answer[];
+  matches: Match[]; 
   setAnswer: (answer: Answer) => void;
   updateCustomText: (questionId: number, text: string) => void;
+  setMatches: (matches: Match[]) => void; 
   resetAnswers: () => void;
 }
 
 export const useUserAnswersStore = create<UserAnswersStore>((set) => ({
   answers: [],
+  matches: [],
 
   setAnswer: (newAnswer) =>
     set((state) => {
@@ -23,6 +32,7 @@ export const useUserAnswersStore = create<UserAnswersStore>((set) => ({
       );
       return { answers: [...updatedAnswers, newAnswer] };
     }),
+
   updateCustomText: (questionId, text) =>
     set((state) => {
       const answerIndex = state.answers.findIndex(
@@ -34,5 +44,7 @@ export const useUserAnswersStore = create<UserAnswersStore>((set) => ({
       return { answers: [...state.answers] };
     }),
 
-  resetAnswers: () => set({ answers: [] }),
+  setMatches: (newMatches) => set({ matches: newMatches }), 
+
+  resetAnswers: () => set({ answers: [], matches: [] }), 
 }));

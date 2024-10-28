@@ -27,6 +27,45 @@ export async function saveQuestionnaireAnswers(answers) {
   }
 }
 
+export async function saveUserMatches(matches) {
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (!user) {
+    console.error("User not authenticated");
+    return;
+  }
+
+  const userDocRef = doc(db, "users", user.uid);
+  const matchesRef = collection(userDocRef, "matches");
+
+  try {
+    const matchDocRef = doc(matchesRef, "latest");
+    await setDoc(matchDocRef, {
+      matches,
+      timestamp: serverTimestamp(),
+    });
+    console.log("Matches successfully saved with a timestamp to Firestore!");
+  } catch (error) {
+    console.error("Error saving matches:", error);
+  }
+}
+
+export async function fetchUserMatch(userId) {
+  try {
+    const userDocRef = doc(db, "users", userId, "matches", "latest");
+    const userDoc = await getDoc(userDocRef);
+    if (userDoc.exists()) {
+      return userDoc.data();
+    } else {
+      console.log("No match data found for user:", userId);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching user match:", error);
+    return null;
+  }
+}
 export async function fetchUsersWithAnswers() {
   const usersCollection = collection(db, 'users');
   const usersSnapshot = await getDocs(usersCollection);
@@ -48,7 +87,7 @@ export async function fetchUsersWithAnswers() {
       address: userData.address,
       company: userData.company,
       username: userData.username,
-      answers
+      answers,
     };
   }));
 
