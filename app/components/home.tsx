@@ -3,10 +3,48 @@ import styles from '../styles/Home.module.scss';
 import { Box, Button, Card, CardContent, Typography, Link } from '@mui/material';
 import { useEffect, useState } from 'react';
 
+import { fetchUserMatch } from '../lib/firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../lib/firebase/clientApp';
+
+
+
+import SeatingArrangement from './seating';
+
 const Home = ({ navigateToVaalikone }: { navigateToVaalikone: () => void }) => {
   const [ip, setIp] = useState<string | null>(null);
-  const { users, totalUsers } = useUsers();
+  const { totalUsers } = useUsers();
 
+  const [userId, setUserId] = useState<string | null>(null);
+  const [extraMatchData, setExtraMatchData] = useState<{ [key: string]: any }>({});
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        setUserId(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const getMatchData = async () => {
+    if (userId && !extraMatchData[userId]) {
+      const fetchedMatch = await fetchUserMatch(userId);
+      console.log(`Fetched match data for user ${userId}:`, fetchedMatch);
+      if (fetchedMatch) {
+        setExtraMatchData((prevData) => ({ ...prevData, [userId]: fetchedMatch }));
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (userId) {
+      getMatchData();
+    }
+  }, [userId]);
 
   useEffect(() => {
     async function getIP() {
@@ -90,9 +128,16 @@ const Home = ({ navigateToVaalikone }: { navigateToVaalikone: () => void }) => {
                 alignItems: 'center',
               }}
             >
-              <Typography variant="body2" color="textSecondary">
-                Placeholder
-              </Typography>
+           {userId && extraMatchData[userId]?.matches ? (
+                <SeatingArrangement
+                  matches={extraMatchData[userId].matches}
+                  currentUserId={userId}
+                />
+              ) : (
+                <Typography variant="body2" color="textSecondary">No match data available.</Typography>
+              )}
+            
+              
             </Box>
           </CardContent>
         </Card>

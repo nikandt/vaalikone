@@ -19,8 +19,6 @@ import { useUserAnswersStore } from '../data/useUserAnswersStore';
 import { fetchUserMatch } from '../lib/firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 
-import SeatingArrangement from './seating';
-
 const Vieraat: React.FC = () => {
   const { users: users, loading } = useUsers();
   const { matches } = useUserAnswersStore();
@@ -121,15 +119,6 @@ const Vieraat: React.FC = () => {
   return (
     <Container maxWidth="md" className={styles.users}>
       <h1>Vieraat</h1>
-
-      {userId && extraMatchData[userId]?.matches ? (
-        <SeatingArrangement
-          matches={extraMatchData[userId].matches}
-          currentUserId={userId}
-        />
-      ) : (
-        <p>No match data available.</p>
-      )}
 
       <div className={styles.controls}>
         <div className={styles.searchBar}>
