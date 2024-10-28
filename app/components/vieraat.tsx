@@ -10,9 +10,7 @@ import {
   Container,
   Typography,
   CircularProgress,
-  LinearProgress,
 } from '@mui/material';
-import { useMemo } from 'react';
 import { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 
@@ -20,6 +18,8 @@ import { FaSearch } from 'react-icons/fa';
 import { useUserAnswersStore } from '../data/useUserAnswersStore';
 import { fetchUserMatch } from '../lib/firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
+
+import SeatingArrangement from './seating';
 
 const Vieraat: React.FC = () => {
   const { users: users, loading } = useUsers();
@@ -30,22 +30,10 @@ const Vieraat: React.FC = () => {
   const [sortBy, setSortBy] = useState<'name' | 'email'>('name');
   const [isAscending, setIsAscending] = useState(true);
 
-  const currentUser = auth.currentUser;
+  //const currentUser = auth.currentUser;
   const [userId, setUserId] = useState<string | null>(null);
   const [extraMatchData, setExtraMatchData] = useState<{ [key: string]: any }>({});
 
-  const getMatchColor = (percentage: number) => {
-    if (percentage >= 75) return 'green';   // High match
-    if (percentage >= 50) return 'orange';  // Medium match
-    return 'red';                           // Low match
-  };
-
-  const maxDistance = (4-1) * 8;
-
-  const getDistanceOpacity = (distance: number, maxDistance: number) => {
-    const normalizedDistance = distance / maxDistance;
-    return 1 - normalizedDistance; // Closer distances are more solid
-  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -133,6 +121,16 @@ const Vieraat: React.FC = () => {
   return (
     <Container maxWidth="md" className={styles.users}>
       <h1>Vieraat</h1>
+
+      {userId && extraMatchData[userId]?.matches ? (
+        <SeatingArrangement
+          matches={extraMatchData[userId].matches}
+          currentUserId={userId}
+        />
+      ) : (
+        <p>No match data available.</p>
+      )}
+
       <div className={styles.controls}>
         <div className={styles.searchBar}>
           <FaSearch className={styles.searchIcon} />
