@@ -11,12 +11,26 @@ import { auth } from '../lib/firebase/clientApp';
 
 import SeatingArrangement from './seating';
 
+interface Match {
+  percentage: number;
+  secondAnswererId: string;
+  distance: number;
+}
+
+interface ExtraMatchData {
+  matches: Match[];
+  timestamp?: {
+    seconds: number;
+    nanoseconds: number;
+  };
+}
+
 const Home = ({ navigateToVaalikone }: { navigateToVaalikone: () => void }) => {
   const [ip, setIp] = useState<string | null>(null);
   const { totalUsers } = useUsers();
 
   const [userId, setUserId] = useState<string | null>(null);
-  const [extraMatchData, setExtraMatchData] = useState<{ [key: string]: any }>({});
+  const [extraMatchData, setExtraMatchData] = useState<{ [key: string]: ExtraMatchData }>({});
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {

@@ -19,7 +19,7 @@ interface Match {
 function SeatingArrangement({ matches, currentUserId }) {
   // Step 1: Sort by distance, then by percentage descending
   const sortedMatches = matches.sort(( a : Match, b : Match) => 
-    a.distance - b.distance || b.percentage - a.percentage
+    a.distance - b.distance || b.percentage - a.percentage,
   );
 
   // Step 2: Group into tables of 4

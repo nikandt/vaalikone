@@ -19,6 +19,20 @@ import { useUserAnswersStore } from '../data/useUserAnswersStore';
 import { fetchUserMatch } from '../lib/firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 
+interface Match {
+  percentage: number;
+  secondAnswererId: string;
+  distance: number;
+}
+
+interface ExtraMatchData {
+  matches: Match[];
+  timestamp?: {
+    seconds: number;
+    nanoseconds: number;
+  };
+}
+
 const Vieraat: React.FC = () => {
   const { users: users, loading } = useUsers();
   const { matches } = useUserAnswersStore();
@@ -30,7 +44,7 @@ const Vieraat: React.FC = () => {
 
   //const currentUser = auth.currentUser;
   const [userId, setUserId] = useState<string | null>(null);
-  const [extraMatchData, setExtraMatchData] = useState<{ [key: string]: any }>({});
+  const [extraMatchData, setExtraMatchData] = useState<{ [key: string]: ExtraMatchData }>({});
 
 
   useEffect(() => {
