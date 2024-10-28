@@ -1,13 +1,11 @@
 import { useUsers } from '../data/users';
 import styles from '../styles/Home.module.scss';
-import { Box, Button, Card, CardContent, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Typography, ListItem, ListItemText } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { fetchUserMatch } from '../lib/firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../lib/firebase/clientApp';
-
-
 
 import SeatingArrangement from './seating';
 
@@ -26,7 +24,6 @@ interface ExtraMatchData {
 }
 
 const Home = ({ navigateToVaalikone }: { navigateToVaalikone: () => void }) => {
-  const [ip, setIp] = useState<string | null>(null);
   const { totalUsers } = useUsers();
 
   const [userId, setUserId] = useState<string | null>(null);
@@ -63,19 +60,9 @@ const Home = ({ navigateToVaalikone }: { navigateToVaalikone: () => void }) => {
     }
   }, [userId]);
 
-  useEffect(() => {
-    async function getIP() {
-      const response = await fetch('https://api.ipify.org/?format=json');
-      const data = await response.json();
-      setIp(data.ip);
-    }
-    getIP();
-  }, []);
-
   return (
     <div className={styles.home}>
       <h1>Tessan ja Visan 60-vuotisjuhlat</h1>
-      <p>{ip ? ip : '...'}</p>
 
       {/* Summary Cards */}
       <Box sx={{ display: 'flex', gap: 3, marginTop: 4 }}>

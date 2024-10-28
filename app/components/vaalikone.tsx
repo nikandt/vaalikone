@@ -37,6 +37,18 @@ import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const questionSetId = 'set_2024';
 
+interface Question {
+  id: number;
+  text: string;
+  category: string;
+}
+
+interface Answer {
+  questionId: number;
+  answer: number;
+  customText?: string;
+}
+
 const findMatches = (
   userAnswers: Answer[],
   candidates: Candidate[],
@@ -52,7 +64,7 @@ const findMatches = (
 };
 
 const Vaalikone = () => {
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
   const { users: candidates } = useUsers();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
