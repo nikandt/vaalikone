@@ -133,7 +133,7 @@ const Vaalikone = () => {
     resetAnswers();
     setCurrentQuestionIndex(0);
     setIsComplete(false);
-    setMatches(null);
+    setMatches([]);
   };
 
   const handleSkip = () => {
