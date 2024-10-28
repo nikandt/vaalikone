@@ -169,7 +169,7 @@ const Vieraat: React.FC = () => {
       {filteredUsers.map((user) => {
       const match = matches?.find((m) => m.secondAnswererId === user.id);
 
-      const dbMatchArray = extraMatchData[userId]?.matches;
+      const dbMatchArray = userId ? extraMatchData[userId]?.matches  : null;
       const dbMatch = dbMatchArray ? dbMatchArray.find(
         (m) => m.secondAnswererId === user.id,
       ) : null;
