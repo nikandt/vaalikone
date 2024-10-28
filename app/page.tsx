@@ -7,7 +7,7 @@ import Vieraat from './components/vieraat';
 import Header from './components/header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { Drawer, List, Typography, Button, ListItemButton, ListItemText, ListItemIcon, IconButton, useMediaQuery, Box } from '@mui/material';
+import { Drawer, List, BottomNavigation, BottomNavigationAction, Typography, Button, ListItemButton, ListItemText, ListItemIcon, IconButton, useMediaQuery, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import PollIcon from '@mui/icons-material/HowToVote';
@@ -27,7 +27,7 @@ import theme from './theme';
 export default function Page() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [currentPage, setCurrentPage] = useState<'home' | 'vaalikone' | 'vieraat' >('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'vaalikone' | 'vieraat' >('vaalikone');
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -61,6 +61,8 @@ export default function Page() {
       {isAuthenticated ? (
         <div style={{ display: 'flex' }}>
           {/* Drawer for navigation */}
+
+          {!isMobile && (
           <Drawer
             variant="permanent"
             open={isDrawerOpen}
@@ -83,19 +85,39 @@ export default function Page() {
             </Box>
             <List>
               <ListItemButton onClick={() => handleNavigation('home')}>
-                <ListItemIcon><HomeIcon /></ListItemIcon>
+                <ListItemIcon sx={{ color: 'white' }}><HomeIcon /></ListItemIcon>
                 {isDrawerOpen && <ListItemText primary="Etusivu" sx={{ typography: 'h6', color: 'white' }}/>}
               </ListItemButton>
               <ListItemButton onClick={() => handleNavigation('vaalikone')}>
-                <ListItemIcon><PollIcon /></ListItemIcon>
+                <ListItemIcon sx={{ color: 'white' }}><PollIcon /></ListItemIcon>
                 {isDrawerOpen && <ListItemText primary="Vaalikone" sx={{ typography: 'h6', color: 'white' }}/>}
               </ListItemButton>
               <ListItemButton onClick={() => handleNavigation('vieraat')}>
-                <ListItemIcon><PeopleIcon /></ListItemIcon>
+                <ListItemIcon sx={{ color: 'white' }}><PeopleIcon /></ListItemIcon>
                 {isDrawerOpen && <ListItemText primary="Vieraat" sx={{ typography: 'h6', color: 'white' }}/>}
               </ListItemButton>
             </List>
           </Drawer>
+          )}
+
+          {isMobile && (
+          <BottomNavigation
+            value={currentPage}
+            onChange={(event, newValue) => handleNavigation(newValue)}
+            sx={{
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              width: '100%',
+              boxShadow: '0 -1px 6px rgba(0, 0, 0, 0.1)',
+            }}
+          >
+            <BottomNavigationAction label="Etusivu" value="home" icon={<HomeIcon />} />
+            <BottomNavigationAction label="Vaalikone" value="vaalikone" icon={<PollIcon />} />
+            <BottomNavigationAction label="Vieraat" value="vieraat" icon={<PeopleIcon />} />
+          </BottomNavigation>
+        )}
 
           {/* Main content area */}
           <div style={{ padding: '16px', width: '100%' }}>
