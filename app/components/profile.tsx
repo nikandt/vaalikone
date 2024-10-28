@@ -70,9 +70,6 @@ const Profile = () => {
           </Box>
 
           {/* Back to Home Button */}
-          <Button variant="contained" color="primary" onClick={() => router.push('/')}>
-            Back to Home
-          </Button>
         </CardContent>
       </Card>
     </Box>

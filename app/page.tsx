@@ -1,18 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Home from './components/home';
 import Vaalikone from './components/vaalikone';
 import Vieraat from './components/vieraat';
 import Header from './components/header';
 import Profile from './components/profile';
-import { Drawer, List, ListItemButton, ListItemText, ListItemIcon, IconButton, useMediaQuery, Box } from '@mui/material';
+import { Drawer, List, Typography, Button, ListItemButton, ListItemText, ListItemIcon, IconButton, useMediaQuery, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import PollIcon from '@mui/icons-material/HowToVote';
 import PeopleIcon from '@mui/icons-material/Group';
 import CloseIcon from '@mui/icons-material/ChevronLeft';
 import { ThemeProvider, CssBaseline } from '@mui/material';
+import { auth } from './lib/firebase/clientApp';
+
+import {
+  onAuthStateChanged
+} from 'firebase/auth';
+
+import {  signInWithGoogle} from './lib/firebase/auth';
+
 import theme from './theme';
 
 export default function Page() {
@@ -20,9 +28,22 @@ export default function Page() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [currentPage, setCurrentPage] = useState<'home' | 'vaalikone' | 'vieraat' | 'profile'>('home');
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
+  };
+
+  const handleSignIn = () => {
+    signInWithGoogle();
   };
 
   const handleNavigation = (page: 'home' | 'vaalikone' | 'vieraat' | 'profile') => {
@@ -36,9 +57,9 @@ export default function Page() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Header initialUser={null} />
-      <div style={{ display: 'flex' }}>
-
-        {/*!isMobile &&*/ (
+      {isAuthenticated ? (
+        <div style={{ display: 'flex' }}>
+          {/* Drawer for navigation */}
           <Drawer
             variant="permanent"
             open={isDrawerOpen}
@@ -72,19 +93,32 @@ export default function Page() {
               </ListItemButton>
             </List>
           </Drawer>
-        )}
-       {/* {isMobile && !isDrawerOpen && (
-          <IconButton onClick={toggleDrawer} aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-        )}*/}                                                                                                            
-        <div style={{ padding: '16px', width: '100%' }}>
-          {currentPage === 'home' && <Home navigateToVaalikone={() => handleNavigation('vaalikone')} />}
-          {currentPage === 'vaalikone' && <Vaalikone />}
-          {currentPage === 'vieraat' && <Vieraat />}
-          {currentPage === 'profile' && <Profile  />}
+
+          {/* Main content area */}
+          <div style={{ padding: '16px', width: '100%' }}>
+            {currentPage === 'home' && <Home navigateToVaalikone={() => handleNavigation('vaalikone')} />}
+            {currentPage === 'vaalikone' && <Vaalikone />}
+            {currentPage === 'vieraat' && <Vieraat />}
+            {currentPage === 'profile' && <Profile />}
+          </div>
         </div>
-      </div>
+      ) : (
+        // Display login page if not authenticated
+          <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          height="100vh"
+          textAlign="center"
+          gap={2}
+        >
+          <Typography variant="h4">Tervetuloa!</Typography>
+          <Button variant="contained" color="primary" onClick={handleSignIn}>
+            Kirjaudu Googlella
+          </Button>
+        </Box>
+      )}
     </ThemeProvider>
   );
 }

@@ -125,7 +125,7 @@ const Header: React.FC<{ initialUser: User | null }> = ({ initialUser }) => {
             onClick={handleSignIn}
             startIcon={<FontAwesomeIcon icon={faSignInAlt} />}
           >
-            Login
+            
           </Button>
         )}
       </Toolbar>
