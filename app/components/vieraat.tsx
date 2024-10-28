@@ -65,7 +65,10 @@ const Vieraat: React.FC = () => {
       const fetchedMatch = await fetchUserMatch(userId);
       console.log(`Fetched match data for user ${userId}:`, fetchedMatch);
       if (fetchedMatch) {
-        setExtraMatchData((prevData) => ({ ...prevData, [userId]: fetchedMatch }));
+        setExtraMatchData((prevData) => ({
+          ...prevData,
+          [userId]: fetchedMatch as ExtraMatchData, // Explicitly cast fetchedMatch
+        }));
       }
     }
   };
