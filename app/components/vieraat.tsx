@@ -3,12 +3,16 @@ import { User } from '../types/user';
 import { useUsers } from '../data/users';
 import { auth } from '../lib/firebase/clientApp';
 import {
+  Box,
   Button,
   Card,
   CardContent,
   Container,
   Typography,
+  CircularProgress,
+  LinearProgress,
 } from '@mui/material';
+import { useMemo } from 'react';
 import { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 
@@ -29,6 +33,19 @@ const Vieraat: React.FC = () => {
   const currentUser = auth.currentUser;
   const [userId, setUserId] = useState<string | null>(null);
   const [extraMatchData, setExtraMatchData] = useState<{ [key: string]: any }>({});
+
+  const getMatchColor = (percentage: number) => {
+    if (percentage >= 75) return 'green';   // High match
+    if (percentage >= 50) return 'orange';  // Medium match
+    return 'red';                           // Low match
+  };
+
+  const maxDistance = (4-1) * 8;
+
+  const getDistanceOpacity = (distance: number, maxDistance: number) => {
+    const normalizedDistance = distance / maxDistance;
+    return 1 - normalizedDistance; // Closer distances are more solid
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -164,14 +181,32 @@ const Vieraat: React.FC = () => {
             </Typography>
 
             {match || dbMatch ? (
-              <>
-                <Typography variant="body2" color="textSecondary">
-                  <strong>Yhteensopivuus:</strong> {((match || dbMatch).percentage * 100).toFixed(1)}%
+
+              
+            <Box position="relative" display="inline-flex" alignItems="center">
+              
+              <CircularProgress
+                variant="determinate"
+                value={((match || dbMatch).percentage || 0) * 100}
+                size={80}
+                thickness={5}
+              />
+              <Box
+                position="absolute"
+                top="50%"
+                left="50%"
+                style={{
+                  transform: "translate(-50%, -50%)",
+                }}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Typography variant="caption" component="div" color="textSecondary">
+                  {((match || dbMatch).percentage * 100).toFixed(1)}%
                 </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  <strong>Etäisyys:</strong> {(match || dbMatch).distance}
-                </Typography>
-              </>
+              </Box>                  
+            </Box>
             ) : (
               <Typography variant="body2" color="textSecondary">
                 No match data available

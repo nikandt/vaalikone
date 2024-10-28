@@ -11,7 +11,7 @@ const MatchDisplay = ({ matchPercentage, candidateName, distance }: MatchDisplay
     <Card sx={{ padding: 2, minWidth: 250, maxWidth: 300, margin: 'auto', textAlign: 'center' }}>
       <Typography variant="h6">{candidateName}</Typography>
       <Typography variant="body2" color="textSecondary">
-        Match Percentage
+        Yhteensopivuus
       </Typography>
       <Box display="flex" alignItems="center" gap={2} my={1}>
         <Typography variant="h5">{Math.round(matchPercentage * 100)}%</Typography>
@@ -22,7 +22,7 @@ const MatchDisplay = ({ matchPercentage, candidateName, distance }: MatchDisplay
         />
       </Box>
       <Typography variant="body2" color="textSecondary">
-        Distance: {distance}
+        Etäisyys: {distance}
       </Typography>
     </Card>
   );
