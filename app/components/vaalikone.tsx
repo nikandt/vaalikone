@@ -183,11 +183,11 @@ const Vaalikone = () => {
 
                     <Card
                       variant="outlined"
-                      style={{
-                        padding: '2.5em',
+                      sx={{
+                        padding: { xs: '1.5em', sm: '2.5em' },
                         textAlign: 'center',
                         marginBottom: '1.5em',
-                        paddingBottom: '3.5em',
+                        paddingBottom: { xs: '2em', sm: '3.5em' },
                       }}
                     >
                       
