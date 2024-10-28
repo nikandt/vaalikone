@@ -5,7 +5,8 @@ import Home from './components/home';
 import Vaalikone from './components/vaalikone';
 import Vieraat from './components/vieraat';
 import Header from './components/header';
-import Profile from './components/profile';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { Drawer, List, Typography, Button, ListItemButton, ListItemText, ListItemIcon, IconButton, useMediaQuery, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
@@ -16,7 +17,7 @@ import { ThemeProvider, CssBaseline } from '@mui/material';
 import { auth } from './lib/firebase/clientApp';
 
 import {
-  onAuthStateChanged
+  onAuthStateChanged,
 } from 'firebase/auth';
 
 import {  signInWithGoogle} from './lib/firebase/auth';
@@ -26,7 +27,7 @@ import theme from './theme';
 export default function Page() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [currentPage, setCurrentPage] = useState<'home' | 'vaalikone' | 'vieraat' | 'profile'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'vaalikone' | 'vieraat' >('home');
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -46,7 +47,7 @@ export default function Page() {
     signInWithGoogle();
   };
 
-  const handleNavigation = (page: 'home' | 'vaalikone' | 'vieraat' | 'profile') => {
+  const handleNavigation = (page: 'home' | 'vaalikone' | 'vieraat' ) => {
     setCurrentPage(page);
     if (isMobile) {
       setIsDrawerOpen(false);
@@ -99,7 +100,6 @@ export default function Page() {
             {currentPage === 'home' && <Home navigateToVaalikone={() => handleNavigation('vaalikone')} />}
             {currentPage === 'vaalikone' && <Vaalikone />}
             {currentPage === 'vieraat' && <Vieraat />}
-            {currentPage === 'profile' && <Profile />}
           </div>
         </div>
       ) : (
@@ -114,9 +114,27 @@ export default function Page() {
           gap={2}
         >
           <Typography variant="h4">Tervetuloa!</Typography>
-          <Button variant="contained" color="primary" onClick={handleSignIn}>
-            Kirjaudu Googlella
-          </Button>
+          <Button
+            onClick={handleSignIn}
+            variant="contained"
+            sx={{
+              textTransform: 'none',
+              borderRadius: 2,
+              padding: '8px 16px',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1.5,
+              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+              '&:hover': {
+                backgroundColor: '#357AE8',
+              },
+            }}
+          >
+      <FontAwesomeIcon icon={faGoogle} style={{ fontSize: '20px' }} />
+      <Typography>Sign in with Google</Typography>
+    </Button>
         </Box>
       )}
     </ThemeProvider>

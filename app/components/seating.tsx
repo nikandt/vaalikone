@@ -9,9 +9,16 @@ function chunkArray(array, size) {
   return result;
 }
 
+interface Match {
+    distance: number;
+    percentage: number;
+    secondAnswererId: string;
+  }
+  
+
 function SeatingArrangement({ matches, currentUserId }) {
   // Step 1: Sort by distance, then by percentage descending
-  const sortedMatches = matches.sort((a, b) => 
+  const sortedMatches = matches.sort(( a : Match, b : Match) => 
     a.distance - b.distance || b.percentage - a.percentage
   );
 

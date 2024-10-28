@@ -154,7 +154,7 @@ const Vieraat: React.FC = () => {
 
       const dbMatchArray = extraMatchData[userId]?.matches;
       const dbMatch = dbMatchArray ? dbMatchArray.find(
-        (m) => m.secondAnswererId === user.id
+        (m) => m.secondAnswererId === user.id,
       ) : null;
 
       if (!match && !extraMatchData[user.id]) getMatchData();
