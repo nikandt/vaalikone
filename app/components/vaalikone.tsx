@@ -7,13 +7,14 @@ import { Answer } from '../types/answers';
 import { Candidate } from '../types/candidate';
 import { Match } from '../types/matchers';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import  MatchDisplay  from './matchDisplay';
 
 // Käyttäjän vastaukset
 import { useUserAnswersStore } from '../data/useUserAnswersStore';
 
 // Firebase 
 import { saveQuestionnaireAnswers, saveUserMatches, fetchQuestionSet } from '../lib/firebase/firestore';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -63,7 +64,7 @@ const Vaalikone = () => {
 
   // Älä näytä vastausvaihtoehtoa ennen valintaa
   const [selectedAnswer, setSelectedAnswer] = useState<number>(0);
-
+  const yksityiskohtainenVertailuRef = useRef<HTMLDivElement | null>(null);
   const [animationDirection, setAnimationDirection] = useState("forward"); // Tracks animation direction
 
 
@@ -135,10 +136,11 @@ const Vaalikone = () => {
     }
   };
 
-  const handleFindMatches = () => {
-    //const userMatches = findMatches(answers, candidates);
-    //setMatches(userMatches);
-    //console.log("Matches:", userMatches);
+  const handleShowResults = () => {
+    yksityiskohtainenVertailuRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
   };
 
   if (loading) return <p>Loading questions...</p>;
@@ -289,7 +291,7 @@ const Vaalikone = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={handleFindMatches}
+            onClick={handleShowResults}
           >
             Näytä tulokset
           </Button>
@@ -307,39 +309,23 @@ const Vaalikone = () => {
           </Typography>
 
           {matches && (
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              gap={2}
-              mt={2}
-            >
-              {matches.slice(0, 3).map((match) => {
-                const candidate = candidates.find(
-                  (c) => c.id.toString() === match.secondAnswererId.toString(),
-                );
-                return (
-                  <Card
-                    key={match.secondAnswererId}
-                    sx={{ width: '100%', maxWidth: 400, padding: 2 }}
-                  >
-                    <Typography variant="h6">
-                      {candidate?.name || 'Unknown Candidate'}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Yhteensopivuus: {(match.percentage * 100).toFixed(1)}%
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Etäisyys: {match.distance}
-                    </Typography>
-                  </Card>
-                );
-              })}
-            </Box>
+            <Box display="flex" flexDirection="column" alignItems="center" gap={2} mt={2}>
+            {matches.slice(0, 3).map((match) => {
+              const candidate = candidates.find((c) => c.id.toString() === match.secondAnswererId.toString());
+              return (
+                <MatchDisplay
+                  key={match.secondAnswererId}
+                  candidateName={candidate?.name || 'Unknown Candidate'}
+                  matchPercentage={match.percentage}
+                  distance={match.distance}
+                />
+              );
+            })}
+          </Box>
           )}
 
           {matches && (
-            <Box mt={4}>
+            <Box ref={yksityiskohtainenVertailuRef} mt={4}>
               {matches.map((match) => {
                 const candidate = candidates.find(
                   (c) => c.id.toString() === match.secondAnswererId.toString(),
