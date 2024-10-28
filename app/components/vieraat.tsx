@@ -167,7 +167,7 @@ const Vieraat: React.FC = () => {
       </div>
       <div className={styles.userList}>
       {filteredUsers.map((user) => {
-      const match = matches.find((m) => m.secondAnswererId === user.id);
+      const match = matches?.find((m) => m.secondAnswererId === user.id);
 
       const dbMatchArray = extraMatchData[userId]?.matches;
       const dbMatch = dbMatchArray ? dbMatchArray.find(

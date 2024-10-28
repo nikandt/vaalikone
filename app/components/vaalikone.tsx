@@ -43,12 +43,6 @@ interface Question {
   category: string;
 }
 
-interface Answer {
-  questionId: number;
-  answer: number;
-  customText?: string;
-}
-
 const findMatches = (
   userAnswers: Answer[],
   candidates: Candidate[],
