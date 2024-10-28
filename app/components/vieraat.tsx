@@ -191,7 +191,7 @@ const Vieraat: React.FC = () => {
               
               <CircularProgress
                 variant="determinate"
-                value={((match || dbMatch).percentage || 0) * 100}
+                value={((match || dbMatch)?.percentage || 0) * 100}
                 size={80}
                 thickness={5}
               />
@@ -207,7 +207,7 @@ const Vieraat: React.FC = () => {
                 justifyContent="center"
               >
                 <Typography variant="caption" component="div" color="textSecondary">
-                  {((match || dbMatch).percentage * 100).toFixed(1)}%
+                  {((match?.percentage || dbMatch?.percentage || 0) * 100).toFixed(1)}%
                 </Typography>
               </Box>                  
             </Box>

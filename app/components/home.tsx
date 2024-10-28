@@ -62,8 +62,6 @@ const Home = ({ navigateToVaalikone }: { navigateToVaalikone: () => void }) => {
 
   return (
     <div className={styles.home}>
-      <h1>Tessan ja Visan 60-vuotisjuhlat</h1>
-
       {/* Summary Cards */}
       <Box sx={{ display: 'flex', gap: 3, marginTop: 4 }}>
         <Card sx={{ flexGrow: 1 }}>
